@@ -111,6 +111,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <script src="/ph.js" defer />
         {GA_MEASUREMENT_ID && (
           <>
             <script
