@@ -4,9 +4,9 @@
    Skipped on localhost unless the URL has ?ph_local=1. */
 (function () {
   var KEY = 'phc_mMUtSdH3zFiKQZKojsTHH5bawjsgtGzZsW8gNzhYRvNZ';
-  // Sites with the same-domain proxy at /rx (a Cloudflare Worker) send everything through it,
-  // so ad blockers that block *.posthog.com don't drop the data. ?ph_proxy=1 forces it (local tests).
-  var PROXY = /(^|\.)(iknowapdf\.lol|msgsaver\.com)$/.test(location.hostname) || location.search.indexOf('ph_proxy=1') !== -1;
+  // All four sites have a same-domain proxy at /rx (Cloudflare Worker or Pages Function) and send everything
+  // through it, so ad blockers that block *.posthog.com don't drop the data. ?ph_proxy=1 forces it (local tests).
+  var PROXY = /(^|\.)(iknowapdf\.lol|msgsaver\.com|ytune\.me|pinotto\.vip)$/.test(location.hostname) || location.search.indexOf('ph_proxy=1') !== -1;
   var HOST = PROXY ? location.origin + '/rx' : 'https://us.i.posthog.com';
   var ASSETS = PROXY ? location.origin + '/rx' : 'https://us-assets.i.posthog.com';
   if (KEY.indexOf('phc_') !== 0) return;
