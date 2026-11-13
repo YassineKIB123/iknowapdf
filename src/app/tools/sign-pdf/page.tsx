@@ -288,6 +288,10 @@ export default function SignPdfPage() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return "";
 
+    // Widen the canvas for long names so the first and last letters are never cut off.
+    ctx.font = fontSpec;
+    canvas.width = Math.max(700, Math.ceil(ctx.measureText(text).width) + 80);
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = color;
     ctx.font = fontSpec;
@@ -346,7 +350,8 @@ export default function SignPdfPage() {
   };
 
   const handleAddDateStamp = () => {
-    const today = new Date().toISOString().split("T")[0];
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
     const url = generateTextStampPng(
       today,
       "#0f172a",

@@ -73,6 +73,8 @@ export default function SanitizePdfPage() {
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Could not inspect PDF metadata.";
       setErrorMessage(msg);
+      setFile(null);
+      setMeta(null);
     }
   };
 

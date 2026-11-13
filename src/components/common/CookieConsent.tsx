@@ -16,6 +16,11 @@ export function CookieConsent() {
     }
   }, []);
 
+  useEffect(() => {
+    document.documentElement.classList.toggle("cookie-banner-open", showBanner);
+    return () => document.documentElement.classList.remove("cookie-banner-open");
+  }, [showBanner]);
+
   const handleAccept = () => {
     localStorage.setItem("cookie_consent", "accepted");
     setShowBanner(false);

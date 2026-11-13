@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { ToolLayout } from "@/components/tools/ToolLayout";
 import { FileDropzone } from "@/components/tools/FileDropzone";
 import { useLanguage } from "@/context/LanguageContext";
-import { downloadBlob } from "@/lib/pdf/pdf-utils";
+import { downloadBlob, getVisualPageSize, visualToPagePoint } from "@/lib/pdf/pdf-utils";
 import type { PDFImage } from "pdf-lib";
 import {
   Stamp,
@@ -121,32 +121,38 @@ export default function WatermarkPdfPage() {
       }
 
       pages.forEach((page, idx) => {
-        const { width, height } = page.getSize();
+        // Sizes and positions are worked out as the page appears on screen, then mapped into
+        // the page's own coordinates so rotated pages get the stamp in the right place.
+        const { width, height } = getVisualPageSize(page);
 
         if (rawTrimmed) {
           if (isAsciiOnly) {
             const fontSize = Math.min(width, height) * 0.085;
             const textWidth = boldFont.widthOfTextAtSize(rawTrimmed, fontSize);
             const rad = (35 * Math.PI) / 180;
-            const x = width / 2 - (textWidth / 2) * Math.cos(rad);
-            const y = height / 2 - (textWidth / 2) * Math.sin(rad);
-
+            const pt = visualToPagePoint(
+              page,
+              width / 2 - (textWidth / 2) * Math.cos(rad),
+              height / 2 - (textWidth / 2) * Math.sin(rad)
+            );
             page.drawText(rawTrimmed, {
-              x,
-              y,
+              x: pt.x,
+              y: pt.y,
               size: fontSize,
               font: boldFont,
               color: colorMap[watermarkColor],
               opacity,
-              rotate: degrees(35),
+              rotate: degrees(35 + pt.rotation),
             });
           } else if (unicodeStampImage) {
             const stampDim = Math.min(width, height) * 0.78;
+            const pt = visualToPagePoint(page, (width - stampDim) / 2, (height - stampDim) / 2);
             page.drawImage(unicodeStampImage, {
-              x: (width - stampDim) / 2,
-              y: (height - stampDim) / 2,
+              x: pt.x,
+              y: pt.y,
               width: stampDim,
               height: stampDim,
+              rotate: degrees(pt.rotation),
             });
           }
         }
@@ -165,12 +171,14 @@ export default function WatermarkPdfPage() {
             y = height - 28;
           }
 
+          const pt = visualToPagePoint(page, x, y);
           page.drawText(label, {
-            x,
-            y,
+            x: pt.x,
+            y: pt.y,
             size: 9.5,
             font: regularFont,
             color: rgb(0.35, 0.38, 0.44),
+            rotate: degrees(pt.rotation),
           });
         }
       });

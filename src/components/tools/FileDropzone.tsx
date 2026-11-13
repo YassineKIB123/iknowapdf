@@ -10,6 +10,8 @@ interface FileDropzoneProps {
   onFilesSelected: (files: File[]) => void;
   title?: string;
   description?: string;
+  /** Unlock PDF needs the protected file as-is, so it skips the automatic check. */
+  skipPdfUnlock?: boolean;
 }
 
 export function FileDropzone({
@@ -18,6 +20,7 @@ export function FileDropzone({
   onFilesSelected,
   title,
   description,
+  skipPdfUnlock = false,
 }: FileDropzoneProps) {
   const { t } = useLanguage();
   const [isDragging, setIsDragging] = useState(false);
@@ -49,7 +52,7 @@ export function FileDropzone({
   );
 
   const processFiles = useCallback(
-    (rawFiles: FileList | File[]) => {
+    async (rawFiles: FileList | File[]) => {
       setErrorMessage(null);
       const fileArray = Array.from(rawFiles);
       if (fileArray.length === 0) return;
@@ -66,20 +69,50 @@ export function FileDropzone({
       });
 
       if (invalidFiles.length > 0) {
+        const allowed = Array.from(
+          new Set(
+            accept
+              .split(",")
+              .map((token) => token.trim().toLowerCase())
+              .filter((token) => token.startsWith("."))
+              .map((token) => token.slice(1).toUpperCase())
+          )
+        ).join(", ");
         setErrorMessage(
-          `Some files were rejected because they do not match "${accept}".`
+          allowed
+            ? `Some files were skipped. This tool accepts: ${allowed}.`
+            : "Some files were skipped because this tool can't open that file type."
         );
       }
 
-      if (validFiles.length > 0) {
-        if (!multiple) {
-          onFilesSelected([validFiles[0]]);
-        } else {
-          onFilesSelected(validFiles);
+      let readyFiles = multiple ? validFiles : validFiles.slice(0, 1);
+
+      // Password-protected PDFs can't be edited as they are: files that only block printing or
+      // copying are unlocked here on the device, files that need a password are refused clearly.
+      if (!skipPdfUnlock && readyFiles.some((f) => f.type === "application/pdf" || /\.pdf$/i.test(f.name))) {
+        const { ensureUnlockedPdf } = await import("@/lib/pdf/pdf-utils");
+        const unlocked: File[] = [];
+        const locked: string[] = [];
+        for (const f of readyFiles) {
+          try {
+            unlocked.push(await ensureUnlockedPdf(f));
+          } catch {
+            locked.push(f.name);
+          }
         }
+        if (locked.length > 0) {
+          setErrorMessage(
+            `"${locked.join('", "')}" is password-protected. Remove the password first with the Unlock PDF tool (/tools/unlock-pdf), then add it again.`
+          );
+        }
+        readyFiles = unlocked;
+      }
+
+      if (readyFiles.length > 0) {
+        onFilesSelected(readyFiles);
       }
     },
-    [accept, multiple, onFilesSelected, validateFile]
+    [accept, multiple, onFilesSelected, validateFile, skipPdfUnlock]
   );
 
   // Automatically pick up any file dropped on the Homepage Hero Dropzone!

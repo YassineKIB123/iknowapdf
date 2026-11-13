@@ -29,6 +29,13 @@ Free, 100% in-browser PDF and image tools. Next.js 16 static export (`out/`) ser
 - Open issues: "$5/month" pricing is really a one-time PayPal payment with no expiry, and the `?payment=completed` unlock isn't verified. Banner ads need `NEXT_PUBLIC_ADSENSE_SLOT_ID`. Yassine is fine with the ad-free bypass for now.
 - Backlinks (GitHub + Show HN, AlternativeTo, Product Hunt) are pending; ask before posting anywhere.
 
+## Tool rules (from the 2026-11-13 review)
+- pdf-lib can't decrypt. `FileDropzone` runs every PDF through `ensureUnlockedPdf` (`src/lib/pdf/pdf-utils.ts`): restricted files are unlocked with qpdf, files that need a password are refused. Only Unlock PDF passes `skipPdfUnlock`. Don't load user PDFs another way.
+- Pages can have `/Rotate`. To draw on a page where the user sees it, use `getVisualPageSize` and `visualToPagePoint` (same file), not `page.getSize()` alone.
+- Images to PDF never crops (A4 with no margin fits the whole image). JPEGs with EXIF rotation go through the canvas path.
+- The PDF editor still exports any changed page as an image (text not selectable). Known limit, not fixed.
+- `src/components/common/ContactForm.tsx` is not used anywhere; the contact page is a mailto link.
+
 ## Analytics (PostHog, added 2026-11-12)
 - `ph.js` (served at `/ph.js`, loaded with `defer` in every page head) loads PostHog US Cloud after the page is idle. One PostHog project covers ytune.me, pinotto.vip and iknowapdf.lol (filter by `$host`). The same `ph.js` is in all three sites: change one, copy it to the other two.
 - No cookies (localStorage only). Replays mask all inputs, file names, data:/blob: images, canvas and embeds; on iknowapdf.lol they also mask all page text. Skipped on localhost unless the URL has `?ph_local=1`. Headless browsers are dropped as bots.

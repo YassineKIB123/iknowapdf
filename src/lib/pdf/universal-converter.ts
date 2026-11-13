@@ -40,8 +40,43 @@ async function ensureLibrary(url: string, globalKey: string): Promise<any> {
   });
 }
 
+// Characters above U+00FF that the built-in PDF fonts (WinAnsi encoding) can still draw:
+// curly quotes, dashes, bullet, ellipsis, euro, trademark and a few accented letters.
+const WINANSI_EXTRA =
+  "\u20AC\u201A\u0192\u201E\u2026\u2020\u2021\u02C6\u2030\u0160\u2039\u0152\u017D\u2018\u2019\u201C\u201D\u2022\u2013\u2014\u02DC\u2122\u0161\u203A\u0153\u017E\u0178";
+
 function hasNonWinAnsiCharacters(text: string): boolean {
-  return /[^\x00-\xFF]/.test(text);
+  for (const ch of text) {
+    if (ch.charCodeAt(0) > 0xff && !WINANSI_EXTRA.includes(ch)) return true;
+  }
+  return false;
+}
+
+/** Shortens `text` with "..." so it fits in `maxWidth` at the given font size. */
+function fitTextToWidth(
+  font: { widthOfTextAtSize: (t: string, s: number) => number },
+  text: string,
+  size: number,
+  maxWidth: number
+): string {
+  if (font.widthOfTextAtSize(text, size) <= maxWidth) return text;
+  let out = text;
+  while (out.length > 1 && font.widthOfTextAtSize(out + "...", size) > maxWidth) {
+    out = out.slice(0, -1);
+  }
+  return out.trimEnd() + "...";
+}
+
+function decodeHtmlEntities(text: string): string {
+  return text
+    .replace(/&nbsp;/g, " ")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/&#(\d+);/g, (_, n: string) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n: string) => String.fromCodePoint(parseInt(n, 16)))
+    .replace(/&amp;/g, "&");
 }
 
 function sanitizeWinAnsiText(text: string): string {
@@ -129,7 +164,7 @@ async function unicodeTextToPDFViaCanvas(title: string, rawText: string): Promis
 
     let y = margin + 20 * SCALE;
 
-    if (pageIndex === 0) {
+    if (pageIndex === 0 && title) {
       ctx.font = `bold ${16 * SCALE}px system-ui, sans-serif`;
       ctx.fillStyle = "#0f172a";
       ctx.fillText(title, textX, y);
@@ -168,9 +203,12 @@ async function unicodeTextToPDFViaCanvas(title: string, rawText: string): Promis
 // 1. CONVERT TO PDF
 // ==========================================
 
-export async function textToPDF(file: File): Promise<Uint8Array> {
+export async function textToPDF(
+  file: File,
+  options: { showTitle?: boolean } = {}
+): Promise<Uint8Array> {
   const text = await file.text();
-  const cleanTitle = file.name.replace(/\.[^/.]+$/, "");
+  const cleanTitle = options.showTitle === false ? "" : file.name.replace(/\.[^/.]+$/, "");
   const safeTitle = sanitizeWinAnsiText(cleanTitle);
 
   if (hasNonWinAnsiCharacters(text) || hasNonWinAnsiCharacters(cleanTitle)) {
@@ -238,14 +276,16 @@ export async function textToPDF(file: File): Promise<Uint8Array> {
   let currentPage = pdfDoc.addPage(PageSizes.A4);
   let y = pageHeight - margin;
 
-  currentPage.drawText(safeTitle, {
-    x: margin,
-    y,
-    size: 16,
-    font: boldFont,
-    color: rgb(0.1, 0.1, 0.1),
-  });
-  y -= 28;
+  if (safeTitle) {
+    currentPage.drawText(safeTitle, {
+      x: margin,
+      y,
+      size: 16,
+      font: boldFont,
+      color: rgb(0.1, 0.1, 0.1),
+    });
+    y -= 28;
+  }
 
   for (const line of wrappedLines) {
     if (y < margin + lineHeight) {
@@ -291,24 +331,21 @@ export async function wordToPDF(file: File): Promise<Uint8Array> {
       .replace(/<li[^>]*>(.*?)<\/li>/gi, "\n• $1")
       .replace(/<\/p>|<\/div>|<\/tr>|<br\s*\/?>/gi, "\n")
       .replace(/<\/td>|<\/th>/gi, "  |  ")
-      .replace(/<[^>]+>/g, "")
-      .replace(/&nbsp;/g, " ")
-      .replace(/&amp;/g, "&")
-      .replace(/&lt;/g, "<")
-      .replace(/&gt;/g, ">")
+      .replace(/<[^>]+>/g, "");
+    const cleanText = decodeHtmlEntities(structuredText)
       .replace(/\n{3,}/g, "\n\n")
       .trim();
-    const textFile = new File([structuredText], file.name.replace(/\.docx?$/i, ".txt"), {
+    const textFile = new File([cleanText], file.name.replace(/\.docx?$/i, ".txt"), {
       type: "text/plain",
     });
-    return await textToPDF(textFile);
+    return await textToPDF(textFile, { showTitle: false });
   }
 
   const { value: rawText } = await mammothLib.extractRawText({ arrayBuffer });
   const textFile = new File([rawText], file.name.replace(/\.docx?$/i, ".txt"), {
     type: "text/plain",
   });
-  return await textToPDF(textFile);
+  return await textToPDF(textFile, { showTitle: false });
 }
 
 export async function powerpointToPDF(file: File): Promise<Uint8Array> {
@@ -326,6 +363,31 @@ export async function powerpointToPDF(file: File): Promise<Uint8Array> {
 
   if (slideFiles.length === 0) {
     throw new Error("No valid PowerPoint slides were found in this file.");
+  }
+
+  // File numbers are creation order. The order the author arranged the slides in lives in
+  // presentation.xml, so use that when it can be read.
+  try {
+    const presXml = await zip.files["ppt/presentation.xml"]?.async("text");
+    const relsXml = await zip.files["ppt/_rels/presentation.xml.rels"]?.async("text");
+    if (presXml && relsXml) {
+      const targets = new Map<string, string>();
+      for (const rel of relsXml.match(/<Relationship\b[^>]*>/g) || []) {
+        const id = rel.match(/\bId="([^"]+)"/)?.[1];
+        const target = rel.match(/\bTarget="([^"]+)"/)?.[1];
+        if (id && target) targets.set(id, target.startsWith("/") ? target.slice(1) : `ppt/${target}`);
+      }
+      const ordered: string[] = [];
+      for (const m of presXml.matchAll(/<p:sldId\b[^>]*\br:id="([^"]+)"/g)) {
+        const path = targets.get(m[1]);
+        if (path && zip.files[path]) ordered.push(path);
+      }
+      if (ordered.length === slideFiles.length) {
+        slideFiles.splice(0, slideFiles.length, ...ordered);
+      }
+    }
+  } catch {
+    // Keep the file-number order.
   }
 
   const pdfDoc = await PDFDocument.create();
@@ -434,12 +496,14 @@ export async function excelToPDF(file: File): Promise<Uint8Array> {
   }
 
   const arrayBuffer = await file.arrayBuffer();
-  const workbook = xlsxLib.read(arrayBuffer, { type: "array" });
+  // cellDates + raw:false below give dates and numbers the way the spreadsheet shows them,
+  // instead of raw serial numbers such as 46338.99.
+  const workbook = xlsxLib.read(arrayBuffer, { type: "array", cellDates: true });
 
   let containsUnicode = false;
   for (const sheetName of workbook.SheetNames) {
     if (hasNonWinAnsiCharacters(sheetName)) containsUnicode = true;
-    const rows: any[][] = xlsxLib.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+    const rows: any[][] = xlsxLib.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1, raw: false });
     for (const row of rows) {
       if (Array.isArray(row) && row.some((c) => c !== undefined && hasNonWinAnsiCharacters(String(c)))) {
         containsUnicode = true;
@@ -452,7 +516,7 @@ export async function excelToPDF(file: File): Promise<Uint8Array> {
     let textDump = "";
     for (const sheetName of workbook.SheetNames) {
       textDump += `# Sheet: ${sheetName}\n`;
-      const rows: any[][] = xlsxLib.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+      const rows: any[][] = xlsxLib.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1, raw: false });
       for (const row of rows) {
         if (Array.isArray(row) && row.length > 0) {
           textDump += row.map((c) => (c !== undefined ? String(c) : "")).join("  |  ") + "\n";
@@ -474,7 +538,7 @@ export async function excelToPDF(file: File): Promise<Uint8Array> {
 
   for (const sheetName of workbook.SheetNames) {
     const sheet = workbook.Sheets[sheetName];
-    const data: any[][] = xlsxLib.utils.sheet_to_json(sheet, { header: 1 });
+    const data: any[][] = xlsxLib.utils.sheet_to_json(sheet, { header: 1, raw: false });
     if (!data || data.length === 0) continue;
 
     let maxRowLen = 0;
@@ -483,60 +547,67 @@ export async function excelToPDF(file: File): Promise<Uint8Array> {
         maxRowLen = data[i].length;
       }
     }
-    const maxCols = Math.min(maxRowLen, 8);
-    if (maxCols === 0) continue;
+    if (maxRowLen === 0) continue;
 
-    let page = pdfDoc.addPage([pageWidth, pageHeight]);
-    let y = pageHeight - margin;
-
-    page.drawText(`Sheet: ${sanitizeWinAnsiText(sheetName)}`, {
-      x: margin,
-      y,
-      size: 14,
-      font: boldFont,
-      color: rgb(0.1, 0.1, 0.1),
-    });
-    y -= 25;
-
-    const colWidth = (pageWidth - margin * 2) / maxCols;
+    // Wide sheets continue on further pages, 8 columns at a time, so no column is dropped.
+    const COLS_PER_PAGE = 8;
     const rowHeight = 18;
+    const colWidth = (pageWidth - margin * 2) / Math.min(maxRowLen, COLS_PER_PAGE);
 
-    for (let rIdx = 0; rIdx < data.length; rIdx++) {
-      const row = data[rIdx];
-      if (!row) continue;
+    for (let colStart = 0; colStart < maxRowLen; colStart += COLS_PER_PAGE) {
+      const cols = Math.min(COLS_PER_PAGE, maxRowLen - colStart);
+      let page = pdfDoc.addPage([pageWidth, pageHeight]);
+      let y = pageHeight - margin;
 
-      if (y < margin + rowHeight) {
-        page = pdfDoc.addPage([pageWidth, pageHeight]);
-        y = pageHeight - margin;
-      }
+      const range = maxRowLen > COLS_PER_PAGE ? ` (columns ${colStart + 1}-${colStart + cols})` : "";
+      page.drawText(`Sheet: ${sanitizeWinAnsiText(sheetName)}${range}`, {
+        x: margin,
+        y,
+        size: 14,
+        font: boldFont,
+        color: rgb(0.1, 0.1, 0.1),
+      });
+      y -= 25;
 
-      if (rIdx === 0) {
-        page.drawRectangle({
-          x: margin,
-          y: y - rowHeight + 12,
-          width: pageWidth - margin * 2,
-          height: rowHeight,
-          color: rgb(0.9, 0.95, 0.92),
-        });
-      }
+      for (let rIdx = 0; rIdx < data.length; rIdx++) {
+        const row = data[rIdx];
+        if (!row) continue;
 
-      for (let cIdx = 0; cIdx < maxCols; cIdx++) {
-        const cellValue =
-          row[cIdx] !== undefined
-            ? sanitizeWinAnsiText(String(row[cIdx])).slice(0, 22).trim()
-            : "";
-        if (cellValue) {
-          page.drawText(cellValue, {
-            x: margin + cIdx * colWidth + 4,
-            y: y - 2,
-            size: 8.5,
-            font: rIdx === 0 ? boldFont : font,
-            color: rIdx === 0 ? rgb(0.05, 0.3, 0.15) : rgb(0.2, 0.2, 0.2),
+        if (y < margin + rowHeight) {
+          page = pdfDoc.addPage([pageWidth, pageHeight]);
+          y = pageHeight - margin;
+        }
+
+        if (rIdx === 0) {
+          page.drawRectangle({
+            x: margin,
+            y: y - rowHeight + 12,
+            width: colWidth * cols,
+            height: rowHeight,
+            color: rgb(0.9, 0.95, 0.92),
           });
         }
-      }
 
-      y -= rowHeight;
+        for (let cIdx = 0; cIdx < cols; cIdx++) {
+          const raw = row[colStart + cIdx];
+          const cellFont = rIdx === 0 ? boldFont : font;
+          const cellValue =
+            raw !== undefined && raw !== null
+              ? fitTextToWidth(cellFont, sanitizeWinAnsiText(String(raw)).trim(), 8.5, colWidth - 8)
+              : "";
+          if (cellValue) {
+            page.drawText(cellValue, {
+              x: margin + cIdx * colWidth + 4,
+              y: y - 2,
+              size: 8.5,
+              font: cellFont,
+              color: rIdx === 0 ? rgb(0.05, 0.3, 0.15) : rgb(0.2, 0.2, 0.2),
+            });
+          }
+        }
+
+        y -= rowHeight;
+      }
     }
   }
 
