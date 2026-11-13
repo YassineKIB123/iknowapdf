@@ -351,7 +351,7 @@ export function ToolLayout({
         {/* Top Navbar */}
         <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 dark:border-slate-800 dark:bg-slate-950/95 backdrop-blur-md">
           <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-            <Link href="/" className="flex items-center gap-2.5 shrink-0 mr-4 xl:mr-6">
+            <Link href="/" className="flex items-center gap-2.5 shrink-0 mr-1 sm:mr-4 xl:mr-6">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-600 text-white shadow-xs shadow-rose-600/30">
                 <Layers className="h-5 w-5" />
               </div>
@@ -581,11 +581,19 @@ export function ToolLayout({
               </div>
             </nav>
 
-            <div className="flex items-center gap-2 sm:gap-2.5 shrink-0 ml-2">
+            <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 ml-1 sm:ml-2">
+              <Link
+                href="/pdf-tools"
+                aria-label={t.site.allTools}
+                title={t.site.allTools}
+                className="md:hidden rounded-xl border border-slate-200 bg-white p-2 text-rose-600 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800 transition-colors shadow-2xs"
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </Link>
               <button
                 type="button"
                 onClick={handleInstallClick}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-slate-900 text-white hover:bg-slate-800 dark:bg-rose-600 dark:hover:bg-rose-500 px-3 py-1.5 text-xs font-bold transition-all shadow-xs"
+                className="hidden min-[400px]:inline-flex items-center gap-1.5 rounded-xl bg-slate-900 text-white hover:bg-slate-800 dark:bg-rose-600 dark:hover:bg-rose-500 px-3 py-1.5 text-xs font-bold transition-all shadow-xs"
               >
                 <Laptop className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">{t.nav.installApp}</span>

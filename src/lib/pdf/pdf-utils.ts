@@ -65,6 +65,107 @@ export async function loadPdfJs(): Promise<any> {
   return _pdfJsPromise;
 }
 
+
+/** Thrown when a PDF needs an open password before any tool can work on it. */
+export class PdfPasswordRequiredError extends Error {
+  constructor() {
+    super("This PDF is password-protected. Remove the password first with the Unlock PDF tool, then try again.");
+    this.name = "PdfPasswordRequiredError";
+  }
+}
+
+function bytesContainAscii(bytes: Uint8Array, needle: string): boolean {
+  const n = needle.length;
+  const first = needle.charCodeAt(0);
+  outer: for (let i = 0, end = bytes.length - n; i <= end; i++) {
+    if (bytes[i] !== first) continue;
+    for (let j = 1; j < n; j++) {
+      if (bytes[i + j] !== needle.charCodeAt(j)) continue outer;
+    }
+    return true;
+  }
+  return false;
+}
+
+/**
+ * pdf-lib cannot decrypt. Editing an encrypted PDF with `ignoreEncryption` produces blank pages
+ * or a file nobody can open, so every tool runs its input through this first:
+ * - not encrypted: the same File is returned untouched;
+ * - only owner restrictions (opens without a password): decrypted losslessly with qpdf;
+ * - needs an open password: throws PdfPasswordRequiredError.
+ */
+export async function ensureUnlockedPdf(file: File): Promise<File> {
+  const isPdf = file.type === "application/pdf" || /\.pdf$/i.test(file.name);
+  if (!isPdf) return file;
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  if (!bytesContainAscii(bytes, "/Encrypt")) return file;
+
+  const { unlockPdf, UnlockError } = await import("@/lib/pdf/unlock-pdf");
+  try {
+    const unlocked = await unlockPdf(bytes);
+    return new File([unlocked as BlobPart], file.name, { type: "application/pdf", lastModified: file.lastModified });
+  } catch (err: unknown) {
+    if (err instanceof UnlockError && err.reason === "wrong-password") throw new PdfPasswordRequiredError();
+    // "/Encrypt" can appear by chance in an unencrypted file; let the tool try the original.
+    return file;
+  }
+}
+
+/** Reads the EXIF orientation (1-8) of a JPEG; 1 when absent or unreadable. */
+function readJpegOrientation(buf: ArrayBuffer): number {
+  try {
+    const v = new DataView(buf);
+    if (v.byteLength < 4 || v.getUint16(0) !== 0xffd8) return 1;
+    let off = 2;
+    while (off + 4 <= v.byteLength) {
+      const marker = v.getUint16(off);
+      if ((marker & 0xff00) !== 0xff00) return 1;
+      const size = v.getUint16(off + 2);
+      if (marker === 0xffe1 && off + 10 <= v.byteLength && v.getUint32(off + 4) === 0x45786966) {
+        const tiff = off + 10;
+        const little = v.getUint16(tiff) === 0x4949;
+        const ifd = tiff + v.getUint32(tiff + 4, little);
+        const count = v.getUint16(ifd, little);
+        for (let i = 0; i < count; i++) {
+          const entry = ifd + 2 + i * 12;
+          if (v.getUint16(entry, little) === 0x0112) {
+            const o = v.getUint16(entry + 8, little);
+            return o >= 1 && o <= 8 ? o : 1;
+          }
+        }
+        return 1;
+      }
+      if (marker === 0xffda) return 1;
+      off += 2 + size;
+    }
+  } catch {
+    // fall through
+  }
+  return 1;
+}
+
+type PdfLibPage = ReturnType<PDFDocument["getPages"]>[number];
+
+/**
+ * Pages can carry a /Rotate value, so what the viewer shows is rotated relative to the page's own
+ * coordinates. These helpers let tools place things where the user sees them.
+ */
+export function getVisualPageSize(page: PdfLibPage): { width: number; height: number; rotation: number } {
+  const { width, height } = page.getSize();
+  const rotation = ((page.getRotation().angle % 360) + 360) % 360;
+  return rotation === 90 || rotation === 270 ? { width: height, height: width, rotation } : { width, height, rotation };
+}
+
+/** Maps a point in on-screen page coordinates (origin bottom-left, y up) to page user space. */
+export function visualToPagePoint(page: PdfLibPage, vx: number, vy: number): { x: number; y: number; rotation: number } {
+  const { width, height } = page.getSize();
+  const rotation = ((page.getRotation().angle % 360) + 360) % 360;
+  if (rotation === 90) return { x: width - vy, y: vx, rotation };
+  if (rotation === 180) return { x: width - vx, y: height - vy, rotation };
+  if (rotation === 270) return { x: vy, y: height - vx, rotation };
+  return { x: vx, y: vy, rotation: 0 };
+}
+
 function dataUrlToUint8Array(dataUrl: string): { bytes: Uint8Array; mime: string } {
   const match = dataUrl.match(/^data:([^;,]+)?(?:;base64)?,(.*)$/);
   if (!match) {
@@ -114,6 +215,7 @@ export async function compressPDFDocument(
   onProgress?: (current: number, total: number) => void
 ): Promise<Uint8Array> {
   const { PDFDocument } = await loadPdfLib();
+  file = await ensureUnlockedPdf(file);
   const buffer = await file.arrayBuffer();
   const originalDoc = await PDFDocument.load(buffer, { ignoreEncryption: true });
 
@@ -251,7 +353,8 @@ export async function mergePDFs(files: File[]): Promise<Uint8Array> {
   const { PDFDocument } = await loadPdfLib();
   const mergedPdf = await PDFDocument.create();
 
-  for (const file of files) {
+  for (const rawFile of files) {
+    const file = await ensureUnlockedPdf(rawFile);
     try {
       const arrayBuffer = await file.arrayBuffer();
       const sourcePdf = await PDFDocument.load(arrayBuffer, {
@@ -362,8 +465,12 @@ async function getImageEmbedData(
 
   if (isJpeg) {
     const bytes = await file.arrayBuffer();
-    const image = await pdfDoc.embedJpg(bytes);
-    return { image };
+    // PDF viewers ignore EXIF rotation, so a rotated phone photo goes through the canvas path
+    // below instead (the browser applies the rotation when it decodes the image).
+    if (readJpegOrientation(bytes) === 1) {
+      const image = await pdfDoc.embedJpg(bytes);
+      return { image };
+    }
   }
 
   if (isPng) {
@@ -469,7 +576,8 @@ export async function imagesToPDF(
       const page = pdfDoc.addPage([pageW, pageH]);
 
       if (options.margin === 0) {
-        const scale = Math.max(pageW / image.width, pageH / image.height);
+        // Fit the whole image on the page (never crop it); it touches the page edge on one axis.
+        const scale = Math.min(pageW / image.width, pageH / image.height);
         const drawW = image.width * scale;
         const drawH = image.height * scale;
 
@@ -511,7 +619,7 @@ export async function imagesToPDF(
  */
 export async function getPDFPageCount(file: File): Promise<number> {
   const { PDFDocument } = await loadPdfLib();
-  const bytes = await file.arrayBuffer();
+  const bytes = await (await ensureUnlockedPdf(file)).arrayBuffer();
   const pdfDoc = await PDFDocument.load(bytes, { ignoreEncryption: true });
   return pdfDoc.getPageCount();
 }
@@ -568,7 +676,7 @@ export function parsePageRangeString(rangeStr: string, totalPages: number): numb
  */
 export async function splitPDF(file: File, pageRangeStr: string): Promise<Uint8Array> {
   const { PDFDocument } = await loadPdfLib();
-  const bytes = await file.arrayBuffer();
+  const bytes = await (await ensureUnlockedPdf(file)).arrayBuffer();
   const sourcePdf = await PDFDocument.load(bytes, { ignoreEncryption: true });
   const totalPages = sourcePdf.getPageCount();
 
@@ -624,7 +732,7 @@ export async function embedSignaturesIntoPDF(
   appendAuditCertificate: boolean = false
 ): Promise<Uint8Array> {
   const { PDFDocument, rgb, degrees, StandardFonts } = await loadPdfLib();
-  const bytes = await pdfFile.arrayBuffer();
+  const bytes = await (await ensureUnlockedPdf(pdfFile)).arrayBuffer();
   const originalSha256 = appendAuditCertificate ? await computeSha256Hex(bytes) : "";
   const pdfDoc = await PDFDocument.load(bytes, { ignoreEncryption: true });
   const pages = pdfDoc.getPages();
@@ -633,20 +741,23 @@ export async function embedSignaturesIntoPDF(
     const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
     const cleanWatermark = watermarkText.replace(/[^\x20-\x7E]/g, "").trim();
     for (const page of pages) {
-      const { width, height } = page.getSize();
+      const { width, height } = getVisualPageSize(page);
       const fontSize = Math.min(width, height) * 0.08;
       const textWidth = font.widthOfTextAtSize(cleanWatermark, fontSize);
       const rad = (35 * Math.PI) / 180;
-      const x = width / 2 - (textWidth / 2) * Math.cos(rad);
-      const y = height / 2 - (textWidth / 2) * Math.sin(rad);
+      const pt = visualToPagePoint(
+        page,
+        width / 2 - (textWidth / 2) * Math.cos(rad),
+        height / 2 - (textWidth / 2) * Math.sin(rad)
+      );
       page.drawText(cleanWatermark, {
-        x,
-        y,
+        x: pt.x,
+        y: pt.y,
         size: fontSize,
         font,
         color: rgb(0.85, 0.15, 0.25),
         opacity: 0.16,
-        rotate: degrees(35),
+        rotate: degrees(35 + pt.rotation),
       });
     }
   }
@@ -655,7 +766,7 @@ export async function embedSignaturesIntoPDF(
     const targetPageIndex = sig.pageNumber - 1;
     if (targetPageIndex < 0 || targetPageIndex >= pages.length) continue;
     const page = pages[targetPageIndex];
-    const { width: pageWidth, height: pageHeight } = page.getSize();
+    const { width: pageWidth, height: pageHeight } = getVisualPageSize(page);
     let signatureImage: PDFImage;
     try {
       const { bytes: rawBytes, mime } = dataUrlToUint8Array(sig.signatureDataUrl);
@@ -682,16 +793,22 @@ export async function embedSignaturesIntoPDF(
     const wRatio = isFractional ? sig.position.widthPercent : sig.position.widthPercent / 100;
     const hRatio = isFractional ? sig.position.heightPercent : sig.position.heightPercent / 100;
 
-    const drawWidth = wRatio * pageWidth;
-    const drawHeight = hRatio * pageHeight;
-    const drawX = xRatio * pageWidth;
-    const drawY = pageHeight - (yRatio + hRatio) * pageHeight;
+    // The on-screen box shows the image with "contain" fit, so keep its proportions here too.
+    const boxWidth = wRatio * pageWidth;
+    const boxHeight = hRatio * pageHeight;
+    const fit = Math.min(boxWidth / signatureImage.width, boxHeight / signatureImage.height);
+    const drawWidth = signatureImage.width * fit;
+    const drawHeight = signatureImage.height * fit;
+    const visualX = xRatio * pageWidth + (boxWidth - drawWidth) / 2;
+    const visualY = pageHeight - (yRatio + hRatio) * pageHeight + (boxHeight - drawHeight) / 2;
+    const pt = visualToPagePoint(page, visualX, visualY);
 
     page.drawImage(signatureImage, {
-      x: drawX,
-      y: drawY,
+      x: pt.x,
+      y: pt.y,
       width: drawWidth,
       height: drawHeight,
+      rotate: degrees(pt.rotation),
     });
   }
 

@@ -172,6 +172,7 @@ interface EditorSnapshot {
 }
 
 const BG_RENDER_SCALE = 2.0;
+const FIND_ALL_PAGES_LIMIT = 30;
 
 const PRESET_COLORS = [
   "#000000",
@@ -261,7 +262,7 @@ function classifyFontItem(
   fontSize: number,
   defaultFontId: EditorFontId,
   fObj?: any
-): { fontId: EditorFontId; isBold: boolean; isItalic: boolean } {
+): { fontId: EditorFontId; isBold: boolean; isItalic: boolean; nameKnown: boolean } {
   const cleaned = rawFontName
     .replace(/\b[A-Z]{6}\+/g, "")
     .replace(/\bg_d\d+_f\d+\b/gi, "")
@@ -299,7 +300,14 @@ function classifyFontItem(
     /italic|oblique|slanted|-it\b|cmti|sfti|cmsl|sfsl|cmmi|lmroman.*italic/.test(cleaned) ||
     Math.abs(shear) > 0.08 * fontSize;
 
-  return { fontId, isBold, isItalic };
+  // When the PDF names a real font family, that name already says whether it is bold; the
+  // pixel-based check is only trusted for fonts with no usable name.
+  const nameKnown =
+    /mono|courier|consolas|menlo|typewriter|cm(r|bx|ti|sl|tt|ss)|sf(rm|bx|ti|tt|ss)|lm(roman|mono|sans)|cambria|caladea|georgia|palatino|garamond|times|nimbusrom|termes|calibri|carlito|aptos|candara|segoe|arial|helvetica|inter|roboto|verdana|tahoma/.test(
+      cleaned
+    );
+
+  return { fontId, isBold, isItalic, nameKnown };
 }
 
 /**
@@ -395,8 +403,13 @@ function sampleBoxFromFullCanvas(
       medianRun = runs[Math.floor(runs.length * 0.5)];
     }
 
-    const isThinRegular = medianRun <= 1.5 && meanRun < Math.max(2.2, fontPx * 0.118);
-    const isThickBold = medianRun >= 2.0 && meanRun >= Math.max(2.5, fontPx * 0.135);
+    // Stem width relative to the font size: regular faces sit near 0.07-0.10 em, bold near
+    // 0.14-0.19 em. Fixed pixel limits read ordinary 10-12pt text as bold.
+    const isThinRegular = medianRun <= Math.max(1.5, fontPx * 0.105);
+    const isThickBold =
+      !isThinRegular &&
+      medianRun >= Math.max(2.0, fontPx * 0.125) &&
+      meanRun >= Math.max(2.5, fontPx * 0.135);
 
     ink.sort((a, b) => b.dist - a.dist);
     const top = ink[0];
@@ -469,21 +482,16 @@ export default function EditPdfPage() {
   const isDrawingSignRef = useRef<boolean>(false);
 
   // Page Geometry & Zoom
-  const [zoomPercent, setZoomPercent] = useState<number>(100);
+  const [zoomPercent, setZoomPercent] = useState<number>(() =>
+    typeof window !== "undefined" && window.innerWidth < 640
+      ? Math.max(42, Math.min(100, Math.floor(((window.innerWidth - 40) / (595.28 * 1.48)) * 100)))
+      : 100
+  );
   const [pageSizePt, setPageSizePt] = useState<{ width: number; height: number }>({
     width: 595.28,
     height: 841.89,
   });
 
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.innerWidth < 640) {
-      const mobileZoom = Math.max(
-        42,
-        Math.min(100, Math.floor(((window.innerWidth - 40) / (595.28 * 1.48)) * 100))
-      );
-      setZoomPercent(mobileZoom);
-    }
-  }, []);
   const [isRenderingPage, setIsRenderingPage] = useState<boolean>(false);
   const [isApplying, setIsApplying] = useState<boolean>(false);
   const [readyDownloadBlob, setReadyDownloadBlob] = useState<{
@@ -620,6 +628,7 @@ export default function EditPdfPage() {
         fontId: EditorFontId;
         isBold: boolean;
         isItalic: boolean;
+        nameKnown: boolean;
       }
 
       const segments: RawSegment[] = [];
@@ -654,7 +663,7 @@ export default function EditPdfPage() {
           // Ignore
         }
 
-        const { fontId, isBold, isItalic } = classifyFontItem(
+        const { fontId, isBold, isItalic, nameKnown } = classifyFontItem(
           realFontName,
           styleObj.fontFamily || "",
           item.transform[2],
@@ -674,6 +683,7 @@ export default function EditPdfPage() {
           fontId,
           isBold,
           isItalic,
+          nameKnown,
         });
       }
 
@@ -741,9 +751,9 @@ export default function EditPdfPage() {
         );
 
         let finalBold = ln.isBold;
-        if (sampled.isThinRegular) {
+        if (sampled.isThinRegular && !ln.nameKnown) {
           finalBold = false;
-        } else if (sampled.isThickBold) {
+        } else if (sampled.isThickBold && !ln.nameKnown) {
           finalBold = true;
         }
 
@@ -972,6 +982,33 @@ export default function EditPdfPage() {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [file, selectedId, handleDeleteSelected, handleUndo, handleRedo]);
+
+  // Find & Replace needs the text of every page, not only the pages opened so far. Reading a
+  // page keeps a rendered copy in memory, so this is limited to documents up to 30 pages.
+  useEffect(() => {
+    if (!showFindReplace || !pdfDocProxy || totalPages > FIND_ALL_PAGES_LIMIT) return;
+    let cancelled = false;
+    const extracted = extractedPagesRef.current;
+    (async () => {
+      for (let p = 1; p <= totalPages && !cancelled; p++) {
+        if (extracted.has(p)) continue;
+        extracted.add(p);
+        try {
+          const { builtLines } = await extractAndRenderPage(pdfDocProxy, p);
+          if (cancelled || extractedPagesRef.current !== extracted) {
+            extracted.delete(p);
+            return;
+          }
+          setLines((prev) => [...prev.filter((l) => l.pageNumber !== p), ...builtLines]);
+        } catch {
+          extracted.delete(p);
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [showFindReplace, pdfDocProxy, totalPages, extractAndRenderPage]);
 
   // Find & Replace across all extracted lines
   const findMatches = findText.trim()
@@ -1447,7 +1484,13 @@ export default function EditPdfPage() {
           ctx.fillStyle = ln.color;
           ctx.textBaseline = "alphabetic";
           const baselineY = (ln.yPt + ln.fontSizePt * 0.84) * EXPORT_SCALE;
-          ctx.fillText(ln.text, ln.xPt * EXPORT_SCALE, baselineY);
+          // Shrink a line that would run past the right page edge instead of cutting it off.
+          const maxLinePx = cnv.width - ln.xPt * EXPORT_SCALE - 4 * EXPORT_SCALE;
+          if (maxLinePx > 0 && ctx.measureText(ln.text).width > maxLinePx) {
+            ctx.fillText(ln.text, ln.xPt * EXPORT_SCALE, baselineY, maxLinePx);
+          } else {
+            ctx.fillText(ln.text, ln.xPt * EXPORT_SCALE, baselineY);
+          }
         }
 
         // 4. Draw foreground Shapes, Forms, Images, Signatures, Freehand
@@ -1997,6 +2040,7 @@ export default function EditPdfPage() {
                     className="rounded bg-sky-600 px-2.5 py-1 font-semibold text-white hover:bg-sky-500 disabled:opacity-40"
                   >
                     Replace All ({findMatches.length})
+                    {totalPages > FIND_ALL_PAGES_LIMIT ? " - opened pages only" : ""}
                   </button>
                   <button
                     type="button"
@@ -2692,7 +2736,7 @@ export default function EditPdfPage() {
             {/* ================================================================ */}
             {/* MODULE 4: STICKY BOTTOM "APPLY CHANGES >" BAR              */}
             {/* ================================================================ */}
-            <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 rounded-2xl bg-[#fde6cc]/95 dark:bg-slate-900/95 p-2 shadow-xl border border-amber-200/80">
+            <div className="fixed bottom-4 [.cookie-banner-open_&]:bottom-64 sm:[.cookie-banner-open_&]:bottom-40 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 rounded-2xl bg-[#fde6cc]/95 dark:bg-slate-900/95 p-2 shadow-xl border border-amber-200/80 transition-[bottom] duration-200">
               <button
                 type="button"
                 onClick={handleApplyChanges}

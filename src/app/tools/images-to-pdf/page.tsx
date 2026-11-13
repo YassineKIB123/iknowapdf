@@ -464,11 +464,7 @@ export default function ImagesToPdfPage({ targetKb }: ImagesToPdfPageProps = {})
                     <img
                       src={currentMeta.url}
                       alt={`Preview page ${previewIndex + 1}`}
-                      className={`h-full w-full transition-all duration-200 ${
-                        margin === 0 && pageSize === "A4"
-                          ? "object-cover"
-                          : "object-contain"
-                      }`}
+                      className="h-full w-full object-contain transition-all duration-200"
                     />
                   </div>
                 </div>

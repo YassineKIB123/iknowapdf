@@ -135,6 +135,7 @@ export default function UnlockPdfPage() {
             accept="application/pdf,.pdf"
             multiple={false}
             onFilesSelected={handleFiles}
+            skipPdfUnlock
             title="Drop a password-protected PDF here"
             description="The file is unlocked on this device and never uploaded."
           />

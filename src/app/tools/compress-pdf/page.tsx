@@ -243,7 +243,9 @@ export default function CompressPdfPage({ targetKb }: CompressPdfPageProps = {})
                         ? `¡Compresión completada! Tamaño: ${formatBytes(resultBytes.length)} (reducción: ${savedRatio}%)`
                         : language === "RU"
                           ? `\u0421\u0436\u0430\u0442\u0438\u0435 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043E! \u0420\u0430\u0437\u043C\u0435\u0440: ${formatBytes(resultBytes.length)} (\u0441\u043E\u043A\u0440\u0430\u0449\u0435\u043D\u0438\u0435: ${savedRatio}%)`
-                          : `Success! Compressed from ${formatBytes(file.size)} to ${formatBytes(resultBytes.length)} (${savedRatio}% reduction).`
+                          : (savedRatio ?? 0) < 5
+                            ? `This PDF is already well optimized: ${formatBytes(file.size)} to ${formatBytes(resultBytes.length)} (${savedRatio}% smaller). Text-only PDFs have little left to remove.`
+                            : `Success! Compressed from ${formatBytes(file.size)} to ${formatBytes(resultBytes.length)} (${savedRatio}% reduction).`
                 }
               />
             )}

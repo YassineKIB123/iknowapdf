@@ -249,7 +249,7 @@ export function BuyCoffeeButton({
           type="button"
           onClick={() => setIsOpen(true)}
           className={
-            "inline-flex items-center justify-center gap-1.5 shrink-0 rounded-xl bg-[#FFDD00] hover:bg-[#FACC15] text-slate-950 font-bold px-3 py-1.5 text-xs shadow-xs transition-transform hover:scale-105 active:scale-95 cursor-pointer " +
+            "hidden sm:inline-flex items-center justify-center gap-1.5 shrink-0 rounded-xl bg-[#FFDD00] hover:bg-[#FACC15] text-slate-950 font-bold px-3 py-1.5 text-xs shadow-xs transition-transform hover:scale-105 active:scale-95 cursor-pointer " +
             className
           }
           title="Buy me a coffee - Support iKnowAPDF"

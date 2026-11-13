@@ -70,7 +70,7 @@ export default function MergePdfPage() {
 
     try {
       const mergedBytes = await mergePDFs(files);
-      const outputFilename = `pdfstudio_merged_${Date.now()}.pdf`;
+      const outputFilename = `iknowapdf_merged_${Date.now()}.pdf`;
 
       downloadBlob(mergedBytes, outputFilename);
       setSuccessMessage(
