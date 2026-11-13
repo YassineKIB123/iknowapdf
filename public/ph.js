@@ -1,11 +1,14 @@
-/* PostHog analytics loader (shared by ytune.me, pinotto.vip, iknowapdf.lol).
+/* PostHog analytics loader (shared by ytune.me, pinotto.vip, iknowapdf.lol, msgsaver.com).
    Loads after the page is idle so it does not affect page speed.
    No cookies (localStorage only). Replays mask every input and any text that looks like a file name.
    Skipped on localhost unless the URL has ?ph_local=1. */
 (function () {
   var KEY = 'phc_mMUtSdH3zFiKQZKojsTHH5bawjsgtGzZsW8gNzhYRvNZ';
-  var HOST = 'https://us.i.posthog.com';
-  var ASSETS = 'https://us-assets.i.posthog.com';
+  // Sites with the same-domain proxy at /rx (a Cloudflare Worker) send everything through it,
+  // so ad blockers that block *.posthog.com don't drop the data. ?ph_proxy=1 forces it (local tests).
+  var PROXY = /(^|\.)(iknowapdf\.lol|msgsaver\.com)$/.test(location.hostname) || location.search.indexOf('ph_proxy=1') !== -1;
+  var HOST = PROXY ? location.origin + '/rx' : 'https://us.i.posthog.com';
+  var ASSETS = PROXY ? location.origin + '/rx' : 'https://us-assets.i.posthog.com';
   if (KEY.indexOf('phc_') !== 0) return;
   if (/^(localhost|127\.|\[::1\])/.test(location.hostname) && location.search.indexOf('ph_local=1') === -1) return;
   var FILE_NAME = /[^\s/\\]+\.(pdf|jpe?g|png|webp|heic|heif|gif|bmp|tiff?|docx?|xlsx?|pptx?|txt|zip|mp4|mp3|m4a)\b/gi;
@@ -19,6 +22,7 @@
       if (!window.posthog || !window.posthog.init) return;
       window.posthog.init(KEY, {
         api_host: HOST,
+        ui_host: 'https://us.posthog.com',
         defaults: '2025-11-30',
         person_profiles: 'identified_only',
         persistence: 'localStorage',
