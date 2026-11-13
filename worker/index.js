@@ -4,12 +4,20 @@
 const PREFIX = '/rx';
 const API_HOST = 'us.i.posthog.com';
 const ASSET_HOST = 'us-assets.i.posthog.com';
+// EasyPrivacy (used by Brave and uBlock) blocks "/posthog-recorder.js" on every domain, so replays never start.
+// The SDK loads /static/<scriptConfig.script>.js, so the config we pass on names RECORDER_ALIAS instead,
+// and /static/RECORDER_ALIAS.js is fetched from the real file upstream.
+const RECORDER = 'posthog-recorder';
+const RECORDER_ALIAS = 'lib-rr';
+const SCRIPT_NAME = /("script"\s*:\s*")posthog-recorder"/g;
 
 async function proxyPostHog(request) {
   const url = new URL(request.url);
   const path = url.pathname.slice(PREFIX.length) || '/';
   const isAsset = path.startsWith('/static/') || path.startsWith('/array/');
-  const target = 'https://' + (isAsset ? ASSET_HOST : API_HOST) + path + url.search;
+  const upstreamPath = path.startsWith('/static/') ? path.replace('/' + RECORDER_ALIAS + '.js', '/' + RECORDER + '.js') : path;
+  const target = 'https://' + (isAsset ? ASSET_HOST : API_HOST) + upstreamPath + url.search;
+  const isConfig = /^\/array\/[^/]+\/config(\.js)?$/.test(path) || path.startsWith('/flags') || path.startsWith('/decide');
 
   const headers = new Headers(request.headers);
   headers.delete('cookie');
@@ -22,6 +30,14 @@ async function proxyPostHog(request) {
   if (isAsset) init.cf = { cacheEverything: true, cacheTtl: 3600 };
 
   const res = await fetch(target, init);
+  if (isConfig && res.ok && request.method !== 'HEAD') {
+    const body = (await res.text()).replace(SCRIPT_NAME, '$1' + RECORDER_ALIAS + '"');
+    const rewritten = new Response(body, res);
+    rewritten.headers.delete('content-length');
+    rewritten.headers.delete('content-encoding');
+    rewritten.headers.delete('set-cookie');
+    return rewritten;
+  }
   const out = new Response(res.body, res);
   out.headers.delete('set-cookie');
   return out;
