@@ -628,17 +628,24 @@ const SPECIAL_CONTENT: Record<string, PseoExtraContent> = {
 // Conversion pages: what the in-browser converter actually produces
 // ---------------------------------------------------------------------------
 
+const OCR_LINK = { href: "/tools/image-to-text", label: "Scanned PDF? Extract the text with OCR" };
+
 function conversion(what: string[], know: string[], faqs: { q: string; a: string }[]): PseoExtraContent {
   return {
     sections: [
       { id: "result", heading: "What you get", bullets: what },
-      { id: "limits", heading: "Good to know before converting", bullets: know },
+      {
+        id: "limits",
+        heading: "Good to know before converting",
+        bullets: know,
+        ...(know.includes(NO_OCR) ? { links: [OCR_LINK] } : {}),
+      },
     ],
     extraFaqs: faqs,
   };
 }
 
-const NO_OCR = "Scanned PDFs are pictures of text with no text layer, so there is nothing to extract — this converter does not do OCR.";
+const NO_OCR = "Scanned PDFs are pictures of text with no text layer, so this converter has nothing to extract. Use Image to Text (OCR) for scans.";
 
 const CONVERSION_CONTENT: Record<string, PseoExtraContent> = {
   "pdf-to-word": conversion(
@@ -694,7 +701,7 @@ const CONVERSION_CONTENT: Record<string, PseoExtraContent> = {
   "pdf-to-text": conversion(
     ["The plain text of every page, ready to copy or download as a .txt file."],
     ["Layout, images and fonts are dropped — only the words remain.", NO_OCR],
-    [{ q: "Why is the output empty?", a: "The PDF is probably a scan (an image of text). Without OCR there is no text to extract." }]
+    [{ q: "Why is the output empty?", a: "The PDF is probably a scan (an image of text) with no text layer. Run it through Image to Text (OCR) instead, which reads the text from the page images." }]
   ),
   "text-to-pdf": conversion(
     ["A clean PDF from plain text or Markdown files.", "Non-Latin scripts such as Arabic or Cyrillic are supported."],

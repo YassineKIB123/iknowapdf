@@ -11,6 +11,7 @@ import {
   RotateCw,
   Image as ImageIcon,
   LockOpen,
+  ScanText,
   FileImage,
   Search,
   Zap,
@@ -100,6 +101,7 @@ const POPULAR_PSEO_LINKS = [
   { href: "/tools/compress-image", label: "Compress image to a target size" },
   { href: "/tools/unlock-pdf", label: "Remove password from PDF" },
   { href: "/tools/heic-to-jpg", label: "HEIC to JPG" },
+  { href: "/tools/image-to-text", label: "Image to text (OCR)" },
   { href: "/compress-image-to-20kb", label: "Compress image to 20KB" },
   { href: "/compress-image-to-50kb", label: "Compress image to 50KB" },
   { href: "/compress-image-to-100kb", label: "Compress image to 100KB" },
@@ -342,6 +344,18 @@ export default function HomeClient() {
         icon: LockOpen,
         iconBg: "bg-amber-50 border-amber-100 dark:bg-amber-950/40 dark:border-amber-900/50",
         iconColor: "text-amber-600 dark:text-amber-400",
+      },
+      {
+        id: "image-to-text",
+        title: t.site.imageToText,
+        description: t.site.imageToTextDesc,
+        href: "/tools/image-to-text",
+        formats: [".JPG", ".PNG", ".PDF", ".TXT"],
+        category: "scan_edit" as const,
+        popular: false,
+        icon: ScanText,
+        iconBg: "bg-violet-50 border-violet-100 dark:bg-violet-950/40 dark:border-violet-900/50",
+        iconColor: "text-violet-600 dark:text-violet-400",
       },
       {
         id: "heic-to-jpg",
@@ -1133,6 +1147,7 @@ export default function HomeClient() {
                 <li><Link href="/tools/compress-image" className="hover:text-rose-600">{t.site.compressImage}</Link></li>
                 <li><Link href="/tools/unlock-pdf" className="hover:text-rose-600">{t.site.unlockPdf}</Link></li>
                 <li><Link href="/tools/heic-to-jpg" className="hover:text-rose-600">{t.site.heicToJpg}</Link></li>
+                <li><Link href="/tools/image-to-text" className="hover:text-rose-600">{t.site.imageToText}</Link></li>
                 <li><Link href="/pdf-tools" className="hover:text-rose-600 font-semibold">{t.site.allTools}</Link></li>
               </ul>
             </div>

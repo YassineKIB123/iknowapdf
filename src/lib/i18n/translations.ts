@@ -13,6 +13,8 @@ export interface Translations {
     heicToJpg: string;
     unlockPdfDesc: string;
     heicToJpgDesc: string;
+    imageToText: string;
+    imageToTextDesc: string;
   };
   nav: {
     merge: string;
@@ -272,6 +274,8 @@ export const DICTIONARY: Record<Language, Translations> = {
       heicToJpg: 'HEIC to JPG',
       unlockPdfDesc: 'Remove a PDF password you know, or lift print and copy restrictions.',
       heicToJpgDesc: 'Convert iPhone HEIC photos to JPG, PNG or PDF in your browser.',
+      imageToText: 'Image to Text (OCR)',
+      imageToTextDesc: 'Extract text from images, screenshots and scanned PDFs with OCR.',
     },
   "nav": {
     "merge": "Merge PDF",
@@ -550,6 +554,8 @@ export const DICTIONARY: Record<Language, Translations> = {
       heicToJpg: 'HEIC en JPG',
       unlockPdfDesc: 'Supprimez le mot de passe d’un PDF que vous connaissez, ou levez les restrictions d’impression et de copie.',
       heicToJpgDesc: 'Convertissez les photos HEIC d’iPhone en JPG, PNG ou PDF dans votre navigateur.',
+      imageToText: 'Image en texte (OCR)',
+      imageToTextDesc: 'Extrayez le texte d’images, de captures d’écran et de PDF scannés grâce à l’OCR.',
     },
   "nav": {
     "merge": "Fusionner PDF",
@@ -828,6 +834,8 @@ export const DICTIONARY: Record<Language, Translations> = {
       heicToJpg: 'HEIC a JPG',
       unlockPdfDesc: 'Quita la contraseña de un PDF que conoces o elimina las restricciones de impresión y copia.',
       heicToJpgDesc: 'Convierte fotos HEIC del iPhone a JPG, PNG o PDF en tu navegador.',
+      imageToText: 'Imagen a texto (OCR)',
+      imageToTextDesc: 'Extrae el texto de imágenes, capturas de pantalla y PDF escaneados con OCR.',
     },
   "nav": {
     "merge": "Unir PDF",
@@ -1106,6 +1114,8 @@ export const DICTIONARY: Record<Language, Translations> = {
       heicToJpg: 'HEIC в JPG',
       unlockPdfDesc: 'Снимите известный вам пароль с PDF или ограничения на печать и копирование.',
       heicToJpgDesc: 'Конвертируйте фото HEIC с iPhone в JPG, PNG или PDF прямо в браузере.',
+      imageToText: 'Распознать текст (OCR)',
+      imageToTextDesc: 'Извлекайте текст из изображений, скриншотов и отсканированных PDF с помощью OCR.',
     },
   "nav": {
     "merge": "Объединить PDF",
@@ -1384,6 +1394,8 @@ export const DICTIONARY: Record<Language, Translations> = {
       heicToJpg: 'تحويل HEIC إلى JPG',
       unlockPdfDesc: 'أزل كلمة مرور ملف PDF تعرفها، أو ارفع قيود الطباعة والنسخ.',
       heicToJpgDesc: 'حوّل صور HEIC من iPhone إلى JPG أو PNG أو PDF داخل متصفحك.',
+      imageToText: 'استخراج النص من الصور (OCR)',
+      imageToTextDesc: 'استخرج النص من الصور ولقطات الشاشة وملفات PDF الممسوحة ضوئيًا باستخدام OCR.',
     },
   "nav": {
     "merge": "دمج PDF",

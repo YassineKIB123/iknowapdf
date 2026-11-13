@@ -1,0 +1,6 @@
+tesseract.js 7.0.0 (dist/tesseract.min.js, dist/worker.min.js) and tesseract.js-core 7.0.0
+(LSTM-only builds: plain, SIMD and relaxed-SIMD), unmodified. Apache License 2.0.
+https://github.com/naptha/tesseract.js  https://github.com/naptha/tesseract.js-core
+Tesseract OCR engine: https://github.com/tesseract-ocr/tesseract (Apache License 2.0).
+Language data in /tesseract/lang/4.0.0_best_int/ comes from @tesseract.js-data/<lang> 1.0.0
+(tessdata_best, integerized), Apache License 2.0: https://github.com/tesseract-ocr/tessdata_best

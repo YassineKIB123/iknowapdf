@@ -56,6 +56,7 @@ export default function PdfToolsHubPage() {
         { href: "/tools/unlock-pdf", label: "Unlock PDF (remove password)" },
         { href: "/tools/heic-to-jpg", label: "HEIC to JPG" },
         { href: "/tools/heic-to-pdf", label: "HEIC to PDF" },
+        { href: "/tools/image-to-text", label: "Image to text (OCR)" },
       ],
     },
     {

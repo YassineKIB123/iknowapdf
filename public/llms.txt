@@ -18,7 +18,7 @@ iKnowAPDF is an independent web app built and maintained by Yassine K. It offers
 - Rotate PDF: https://iknowapdf.lol/tools/rotate-pdf
 - Sign PDF: https://iknowapdf.lol/tools/sign-pdf (drawn, typed or uploaded signatures, date stamps, optional page listing SHA-256 hashes; not a certificate-based digital signature)
 - Edit PDF: https://iknowapdf.lol/tools/edit-pdf (edit existing text, add text, shapes, images, whiteout; edited pages are flattened on export)
-- Scan to PDF: https://iknowapdf.lol/tools/scan (camera or photo capture, crop, perspective correction, filters; no OCR)
+- Scan to PDF: https://iknowapdf.lol/tools/scan (camera or photo capture, crop, perspective correction, filters; for text recognition use Image to Text)
 - Convert: https://iknowapdf.lol/tools/convert (PDF to/from Word, Excel, PowerPoint, text)
 - Images to PDF: https://iknowapdf.lol/tools/images-to-pdf
 - PDF to Images: https://iknowapdf.lol/tools/pdf-to-images
@@ -28,6 +28,7 @@ iKnowAPDF is an independent web app built and maintained by Yassine K. It offers
 - Unlock PDF: https://iknowapdf.lol/tools/unlock-pdf (removes a PDF password the user knows, or print/copy/edit restrictions, with qpdf compiled to WebAssembly; does not crack unknown passwords)
 - HEIC to JPG: https://iknowapdf.lol/tools/heic-to-jpg (iPhone HEIC/HEIF to JPG or PNG, batch ZIP download; works in browsers without native HEIC support)
 - HEIC to PDF: https://iknowapdf.lol/tools/heic-to-pdf (several HEIC photos into one PDF, A4 or photo-size pages)
+- Image to Text (OCR): https://iknowapdf.lol/tools/image-to-text (extracts text from images, screenshots and scanned PDFs with Tesseract compiled to WebAssembly; 10 languages; output is plain text to copy or save as .txt; does not create searchable PDFs)
 
 ## Popular Tasks
 - Compress PDF under 100KB: https://iknowapdf.lol/compress-pdf-under-100kb
@@ -53,7 +54,7 @@ iKnowAPDF is an independent web app built and maintained by Yassine K. It offers
 - Are files uploaded? No. The PDF tools read files in the browser and produce the result locally. This can be checked in browser developer tools (Network tab).
 - Is there a file-size limit? None is imposed by iKnowAPDF; very large files are limited by the device's memory.
 - Can it compress a PDF to an exact size? Size-target pages (for example https://iknowapdf.lol/compress-pdf-under-200kb) aim for the target with up to two passes; long documents may need to be split first.
-- Does it do OCR? No. Scanned PDFs stay image-based.
+- Does it do OCR? Yes, as text extraction: https://iknowapdf.lol/tools/image-to-text reads text from images and scanned PDFs in the browser. It does not turn a scan into a searchable PDF.
 
 ## More
 - Guides: https://iknowapdf.lol/blog

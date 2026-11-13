@@ -163,7 +163,7 @@ endobj`
         type: "callout",
         variant: "info",
         title: "Does iKnowAPDF Do OCR?",
-        text: "Not currently. iKnowAPDF's [document scanner](/tools/scan) creates clean image-based PDFs, and [PDF to Text](/pdf-to-text) extracts text from PDFs that already contain a text layer. For OCR itself, see the options below."
+        text: "Yes. [Image to Text (OCR)](/tools/image-to-text) reads the text in images, screenshots and scanned PDFs inside your browser with Tesseract, so the file is never uploaded. It gives you plain text to copy or save; it does not turn a scan into a searchable PDF. For that, see the desktop options below."
       },
       {
         type: "heading2",
@@ -226,7 +226,7 @@ ET`
         type: "step",
         number: 2,
         title: "Run OCR with a Tool You Trust",
-        text: "Use an on-device option from the list above for sensitive documents."
+        text: "[Image to Text (OCR)](/tools/image-to-text) reads the page in your browser and gives you the text to copy or save. To embed a searchable text layer in the PDF itself, use one of the desktop options above."
       },
       {
         type: "step",

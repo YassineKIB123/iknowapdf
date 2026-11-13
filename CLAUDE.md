@@ -25,7 +25,8 @@ Free, 100% in-browser PDF and image tools. Next.js 16 static export (`out/`) ser
 - No fake `aggregateRating` or made-up review numbers.
 - Exact-KB compression (image and PDF) and its landing pages already exist.
 - Done on 2026-11-05: scanner upgrade, `/tools/unlock-pdf` (qpdf WASM), `/tools/heic-to-jpg`, `/tools/heic-to-pdf`.
-- Ideas not built yet: Protect PDF, delete/extract/reorder pages, OCR.
+- Done on 2026-11-13: `/tools/image-to-text` (OCR). tesseract.js 7 + LSTM-only cores self-hosted in `public/tesseract/7.0.0/`, 10 languages (`public/tesseract/lang/4.0.0_best_int/*.traineddata.gz`), loaded by `src/lib/ocr/ocr.ts`. Not an npm dependency: to upgrade, copy `dist/tesseract.min.js`, `dist/worker.min.js` and the three `*-lstm.wasm.js` cores into a new version folder and bump `TESS_BASE`. PDF pages with a text layer are copied, not OCR'd. Output is plain text only (no searchable PDF yet).
+- Ideas not built yet: Protect PDF, delete/extract/reorder pages, searchable PDF (OCR text layer).
 - Open issues: "$5/month" pricing is really a one-time PayPal payment with no expiry, and the `?payment=completed` unlock isn't verified. Banner ads need `NEXT_PUBLIC_ADSENSE_SLOT_ID`. Yassine is fine with the ad-free bypass for now.
 - Backlinks (GitHub + Show HN, AlternativeTo, Product Hunt) are pending; ask before posting anywhere.
 

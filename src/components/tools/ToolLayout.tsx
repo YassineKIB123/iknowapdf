@@ -33,6 +33,7 @@ import {
   Heart,
   BookOpen,
   LockOpen,
+  ScanText,
 } from "lucide-react";
 import React, { useState, useEffect, useRef, createContext, useContext } from "react";
 import { AdBanner } from "@/components/ads/AdBanner";
@@ -77,7 +78,8 @@ export type SupportedToolId =
   | "sanitize"
   | "compressImage"
   | "unlockPdf"
-  | "heicToJpg";
+  | "heicToJpg"
+  | "imageToText";
 
 interface ToolLayoutProps {
   toolId?: SupportedToolId;
@@ -137,6 +139,8 @@ function getToolMeta(
       return { title: t.site.unlockPdf, description: fallbackDesc };
     case "heicToJpg":
       return { title: t.site.heicToJpg, description: fallbackDesc };
+    case "imageToText":
+      return { title: t.site.imageToText, description: fallbackDesc };
     default:
       return { title: fallbackTitle, description: fallbackDesc };
   }
@@ -147,6 +151,7 @@ function inferToolIdFromPathname(pathname: string): SupportedToolId | undefined 
   if (clean.includes("compress-image")) return "compressImage";
   if (clean.includes("unlock-pdf")) return "unlockPdf";
   if (clean.includes("heic")) return "heicToJpg";
+  if (clean.includes("image-to-text")) return "imageToText";
   if (clean.includes("compress")) return "compress";
   if (clean.includes("merge")) return "merge";
   if (clean.includes("split")) return "split";
@@ -560,6 +565,14 @@ export function ToolLayout({
                             <LockOpen className="h-4 w-4 text-amber-500" />
                             <span className="font-semibold text-xs">{t.site.unlockPdf}</span>
                           </Link>
+                          <Link
+                            href="/tools/image-to-text"
+                            onClick={() => setIsMegaMenuOpen(false)}
+                            className="flex items-center gap-2.5 rounded-lg p-2 text-slate-700 hover:bg-slate-50 hover:text-rose-600 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
+                          >
+                            <ScanText className="h-4 w-4 text-violet-500" />
+                            <span className="font-semibold text-xs">{t.site.imageToText}</span>
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -947,6 +960,7 @@ export function ToolLayout({
                 <li><Link href="/tools/sign-pdf" className="hover:text-rose-600">{t.tools.signTitle}</Link></li>
                 <li><Link href="/tools/sanitize-pdf" className="hover:text-rose-600">{t.tools.sanitizeTitle}</Link></li>
                 <li><Link href="/tools/unlock-pdf" className="hover:text-rose-600">{t.site.unlockPdf}</Link></li>
+                <li><Link href="/tools/image-to-text" className="hover:text-rose-600">{t.site.imageToText}</Link></li>
               </ul>
             </div>
           </div>

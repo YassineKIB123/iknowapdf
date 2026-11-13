@@ -64,7 +64,7 @@ All tools: https://iknowapdf.lol/pdf-tools
 
 ### Scan to PDF — https://iknowapdf.lol/tools/scan
 - Capture pages with a webcam or phone camera, or upload photos; crop with perspective correction; filters: Original, Magic Color, B&W Clean, Grayscale; save multi-page PDFs.
-- Output is image-based. **There is no OCR.**
+- Output is image-based (no text layer). To get the text out of a scan, use Image to Text (OCR): https://iknowapdf.lol/tools/image-to-text
 
 ### Convert — https://iknowapdf.lol/tools/convert
 - PDF to Word (.docx), Excel (.xlsx), PowerPoint (.pptx) and text; Word, Excel, PowerPoint and text to PDF.
@@ -95,8 +95,11 @@ All tools: https://iknowapdf.lol/pdf-tools
 ### HEIC to JPG / HEIC to PDF — https://iknowapdf.lol/tools/heic-to-jpg, https://iknowapdf.lol/tools/heic-to-pdf
 - Converts iPhone HEIC/HEIF photos to JPG, PNG or a single PDF in any modern browser (native decoder in Safari, libheif/WebAssembly elsewhere). Batch conversion with ZIP download; EXIF metadata such as GPS location is not copied to the output. HEIC photos are also accepted by Images to PDF and Compress Image.
 
+### Image to Text (OCR) — https://iknowapdf.lol/tools/image-to-text
+- Extracts text from JPG, PNG, WebP, BMP, GIF and HEIC images, pasted screenshots and scanned PDFs with Tesseract (tesseract.js) compiled to WebAssembly, entirely in the browser. Languages: English, Spanish, French, German, Portuguese, Italian, Russian, Arabic, Hindi, Simplified Chinese (up to three at once). PDF pages that already have a text layer are copied directly unless "OCR every page" is ticked. Output is editable plain text (copy or .txt download). It does not add a searchable text layer to the PDF, and handwriting accuracy is limited.
+
 ### Not offered
-- OCR (text recognition), adding or removing PDF passwords, certificate-based digital signatures, validated PDF/A conversion.
+- Searchable PDF output (adding an OCR text layer to a PDF), adding PDF passwords, certificate-based digital signatures, validated PDF/A conversion.
 
 ---
 
