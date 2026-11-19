@@ -7,7 +7,7 @@ export const cluster2Articles = [
     description: "What makes PDFs large, how lossless object-stream packing differs from page rasterization, and which iKnowAPDF compression preset fits which document.",
     category: "compression",
     tags: ["Compress PDF", "Lossless", "Lossy", "Optimization"],
-    publishedAt: "2026-04-02",
+    publishedAt: "2026-10-25",
     updatedAt: "2026-11-04",
     authorId: "yassine-k",
     toolCta: {
@@ -158,7 +158,7 @@ export const cluster2Articles = [
     description: "Practical steps to get scanned IDs, transcripts and forms under 200KB or 100KB for visa, university and job portals while keeping them readable.",
     category: "compression",
     tags: ["200KB Limit", "Government Portal", "Compress PDF", "Passports"],
-    publishedAt: "2026-04-10",
+    publishedAt: "2026-10-25",
     updatedAt: "2026-11-04",
     authorId: "yassine-k",
     toolCta: {
@@ -280,7 +280,7 @@ if (targetKb && rasterCompressedBytes.length > targetKb * 1024) {
     description: "How PDF object streams, Fast Web View (linearization) and HTTP byte-range requests affect how quickly large PDFs open in the browser.",
     category: "compression",
     tags: ["Fast Web View", "Object Streams", "Web Optimization", "Streaming", "PDF Spec"],
-    publishedAt: "2026-04-18",
+    publishedAt: "2026-10-25",
     updatedAt: "2026-11-04",
     authorId: "yassine-k",
     toolCta: {
@@ -395,7 +395,7 @@ location ~* \\.pdf$ {
     description: "Why PDFs exported from AutoCAD or Revit can freeze tablets and viewers, and when flattening drawings into images is a sensible fix.",
     category: "compression",
     tags: ["CAD PDF", "Architecture", "Vector Bloat", "Blueprints", "Performance"],
-    publishedAt: "2026-04-26",
+    publishedAt: "2026-10-25",
     updatedAt: "2026-11-04",
     authorId: "yassine-k",
     toolCta: {

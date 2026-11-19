@@ -8,7 +8,7 @@ export const cluster4Articles = [
     description: "What PDF/A (ISO 19005) requires — embedded fonts, color output intents, no encryption or scripts — and how to create and validate a compliant archival file.",
     category: "archiving",
     tags: ["PDF/A", "Archiving", "ISO 19005", "Legal Compliance"],
-    publishedAt: "2026-06-02",
+    publishedAt: "2026-10-25",
     updatedAt: "2026-11-04",
     authorId: "yassine-k",
     toolCta: {
@@ -143,7 +143,7 @@ endobj`
     description: "How OCR turns scanned pages into searchable text, how invisible text layers work in PDFs, and how to run OCR without exposing sensitive documents.",
     category: "archiving",
     tags: ["OCR", "Scanned PDF", "Tesseract", "Searchable PDF"],
-    publishedAt: "2026-06-10",
+    publishedAt: "2026-10-25",
     updatedAt: "2026-11-04",
     authorId: "yassine-k",
     toolCta: {
@@ -273,7 +273,7 @@ ET`
     description: "Why bookmarks, links and fillable fields often break when PDFs are merged, and practical steps to combine documents without losing the parts you need.",
     category: "archiving",
     tags: ["Merge PDF", "Bookmarks", "AcroForm", "Combine PDF"],
-    publishedAt: "2026-06-18",
+    publishedAt: "2026-10-25",
     updatedAt: "2026-11-04",
     authorId: "yassine-k",
     toolCta: {
@@ -390,7 +390,7 @@ endobj`
     description: "Why the read-only flag doesn't protect a filled PDF form, and how flattening turns form fields into ordinary page content that is much harder to change.",
     category: "archiving",
     tags: ["Flatten PDF", "AcroForm", "Read Only", "Form Fields", "Sanitize PDF"],
-    publishedAt: "2026-06-25",
+    publishedAt: "2026-10-25",
     updatedAt: "2026-11-04",
     authorId: "yassine-k",
     toolCta: {

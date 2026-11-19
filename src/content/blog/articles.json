@@ -23,7 +23,7 @@
         "Privacy",
         "Metadata"
       ],
-      "publishedAt": "2026-03-05",
+      "publishedAt": "2026-10-25",
       "updatedAt": "2026-11-04",
       "authorId": "yassine-k",
       "toolCta": {
@@ -202,7 +202,7 @@
         "ePHI",
         "Data Privacy"
       ],
-      "publishedAt": "2026-03-12",
+      "publishedAt": "2026-10-25",
       "updatedAt": "2026-11-04",
       "authorId": "yassine-k",
       "toolCta": {
@@ -337,8 +337,8 @@
         "Sanitization",
         "XRef"
       ],
-      "publishedAt": "2026-03-18",
-      "updatedAt": "2026-03-18",
+      "publishedAt": "2026-10-25",
+      "updatedAt": "2026-10-25",
       "authorId": "yassine-k",
       "toolCta": {
         "toolId": "sanitize",
@@ -450,8 +450,8 @@
         "Privacy",
         "Security"
       ],
-      "publishedAt": "2026-03-24",
-      "updatedAt": "2026-03-24",
+      "publishedAt": "2026-10-25",
+      "updatedAt": "2026-10-25",
       "authorId": "yassine-k",
       "toolCta": {
         "toolId": "edit",
@@ -558,7 +558,7 @@
         "Lossy",
         "Optimization"
       ],
-      "publishedAt": "2026-04-02",
+      "publishedAt": "2026-10-25",
       "updatedAt": "2026-11-04",
       "authorId": "yassine-k",
       "toolCta": {
@@ -720,7 +720,7 @@
         "Compress PDF",
         "Passports"
       ],
-      "publishedAt": "2026-04-10",
+      "publishedAt": "2026-10-25",
       "updatedAt": "2026-11-04",
       "authorId": "yassine-k",
       "toolCta": {
@@ -838,7 +838,7 @@
         "Streaming",
         "PDF Spec"
       ],
-      "publishedAt": "2026-04-18",
+      "publishedAt": "2026-10-25",
       "updatedAt": "2026-11-04",
       "authorId": "yassine-k",
       "toolCta": {
@@ -952,7 +952,7 @@
         "Blueprints",
         "Performance"
       ],
-      "publishedAt": "2026-04-26",
+      "publishedAt": "2026-10-25",
       "updatedAt": "2026-11-04",
       "authorId": "yassine-k",
       "toolCta": {
@@ -1066,7 +1066,7 @@
         "ESIGN Act",
         "Sign PDF"
       ],
-      "publishedAt": "2026-05-04",
+      "publishedAt": "2026-10-25",
       "updatedAt": "2026-11-04",
       "authorId": "yassine-k",
       "toolCta": {
@@ -1190,7 +1190,7 @@
         "Document Security",
         "Sanitize PDF"
       ],
-      "publishedAt": "2026-05-12",
+      "publishedAt": "2026-10-25",
       "updatedAt": "2026-11-04",
       "authorId": "yassine-k",
       "toolCta": {
@@ -1353,7 +1353,7 @@
         "CPA Workflow",
         "Financial Security"
       ],
-      "publishedAt": "2026-05-20",
+      "publishedAt": "2026-10-25",
       "updatedAt": "2026-11-04",
       "authorId": "yassine-k",
       "toolCta": {
@@ -1469,7 +1469,7 @@
         "SHA-256",
         "Sign PDF"
       ],
-      "publishedAt": "2026-05-28",
+      "publishedAt": "2026-10-25",
       "updatedAt": "2026-11-04",
       "authorId": "yassine-k",
       "toolCta": {
@@ -1596,7 +1596,7 @@
         "ISO 19005",
         "Legal Compliance"
       ],
-      "publishedAt": "2026-06-02",
+      "publishedAt": "2026-10-25",
       "updatedAt": "2026-11-04",
       "authorId": "yassine-k",
       "toolCta": {
@@ -1725,7 +1725,7 @@
         "Tesseract",
         "Searchable PDF"
       ],
-      "publishedAt": "2026-06-10",
+      "publishedAt": "2026-10-25",
       "updatedAt": "2026-11-04",
       "authorId": "yassine-k",
       "toolCta": {
@@ -1854,7 +1854,7 @@
         "AcroForm",
         "Combine PDF"
       ],
-      "publishedAt": "2026-06-18",
+      "publishedAt": "2026-10-25",
       "updatedAt": "2026-11-04",
       "authorId": "yassine-k",
       "toolCta": {
@@ -1969,7 +1969,7 @@
         "Form Fields",
         "Sanitize PDF"
       ],
-      "publishedAt": "2026-06-25",
+      "publishedAt": "2026-10-25",
       "updatedAt": "2026-11-04",
       "authorId": "yassine-k",
       "toolCta": {

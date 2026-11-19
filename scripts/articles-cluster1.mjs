@@ -7,7 +7,7 @@ export const cluster1Articles = [
     description: "Where hidden author names, XMP metadata, old revisions and form data live inside a PDF, and how to strip them in your browser before you publish or file.",
     category: "security",
     tags: ["Sanitize PDF", "Document Security", "Legal Tech", "Privacy", "Metadata"],
-    publishedAt: "2026-03-05",
+    publishedAt: "2026-10-25",
     updatedAt: "2026-11-04",
     authorId: "yassine-k",
     toolCta: {
@@ -159,7 +159,7 @@ endobj`
     description: "Why uploading patient records to free online PDF converters can create HIPAA problems, and how in-browser processing keeps files on the clinic's own computer.",
     category: "security",
     tags: ["HIPAA", "Healthcare", "Compliance", "ePHI", "Data Privacy"],
-    publishedAt: "2026-03-12",
+    publishedAt: "2026-10-25",
     updatedAt: "2026-11-04",
     authorId: "yassine-k",
     toolCta: {
@@ -292,8 +292,8 @@ endobj`
     description: "How PDF incremental saves can leave earlier drafts and deleted text inside the file, and how rewriting the file into a single revision removes them.",
     category: "security",
     tags: ["Revision History", "PDF Forensics", "Contract Security", "Sanitization", "XRef"],
-    publishedAt: "2026-03-18",
-    updatedAt: "2026-03-18",
+    publishedAt: "2026-10-25",
+    updatedAt: "2026-10-25",
     authorId: "yassine-k",
     toolCta: {
       toolId: "sanitize",
@@ -417,8 +417,8 @@ startxref
     description: "The difference between drawing a box over text and actually removing it from the PDF, plus a quick test to check whether a redaction worked.",
     category: "security",
     tags: ["Redaction", "PII Protection", "Privacy", "Security"],
-    publishedAt: "2026-03-24",
-    updatedAt: "2026-03-24",
+    publishedAt: "2026-10-25",
+    updatedAt: "2026-10-25",
     authorId: "yassine-k",
     toolCta: {
       toolId: "edit",

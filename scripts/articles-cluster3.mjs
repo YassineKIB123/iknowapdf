@@ -7,7 +7,7 @@ export const cluster3Articles = [
     description: "The difference between simple electronic signatures, SHA-256 document hashes and certificate-based digital signatures in PDFs, and when each one is used.",
     category: "legal",
     tags: ["Digital Signatures", "SHA-256", "eIDAS", "ESIGN Act", "Sign PDF"],
-    publishedAt: "2026-05-04",
+    publishedAt: "2026-10-25",
     updatedAt: "2026-11-04",
     authorId: "yassine-k",
     toolCta: {
@@ -129,7 +129,7 @@ const sha256Hex = Array.from(new Uint8Array(hashBuffer))
     description: "How PDF encryption evolved from 40-bit RC4 to AES-256, why metadata can stay readable in a locked PDF, and why to clean a file before encrypting it.",
     category: "legal",
     tags: ["AES-256", "Encryption", "Password Protect", "Document Security", "Sanitize PDF"],
-    publishedAt: "2026-05-12",
+    publishedAt: "2026-10-25",
     updatedAt: "2026-11-04",
     authorId: "yassine-k",
     toolCta: {
@@ -275,7 +275,7 @@ endobj`
     description: "Why banks restrict statement PDFs with an owner password, what the permission flags control, and legitimate ways account holders can work with these files.",
     category: "legal",
     tags: ["Bank Statement", "Permissions Restricted", "CPA Workflow", "Financial Security"],
-    publishedAt: "2026-05-20",
+    publishedAt: "2026-10-25",
     updatedAt: "2026-11-04",
     authorId: "yassine-k",
     toolCta: {
@@ -397,7 +397,7 @@ endobj
     description: "What an e-signature audit trail is, what it can and can't prove, and how freelancers and small businesses can keep a simple record of signed PDF contracts.",
     category: "legal",
     tags: ["Audit Trail", "Contract Signing", "ESIGN Act", "SHA-256", "Sign PDF"],
-    publishedAt: "2026-05-28",
+    publishedAt: "2026-10-25",
     updatedAt: "2026-11-04",
     authorId: "yassine-k",
     toolCta: {
