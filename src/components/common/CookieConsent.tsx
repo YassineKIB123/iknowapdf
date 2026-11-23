@@ -52,7 +52,7 @@ export function CookieConsent() {
               </span>
             </p>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
-              All PDF operations run 100% in your browser memory. We use cookies and local storage to remember your language and theme preferences, and to serve advertisements via Google AdSense. Learn more in our{" "}
+              All PDF operations run 100% in your browser memory. We use local storage to remember your language and theme, and privacy-friendly analytics with no cookies. No ads. Learn more in our{" "}
               <Link href="/privacy" className="text-rose-600 font-semibold underline hover:text-rose-500">
                 Privacy Policy
               </Link>

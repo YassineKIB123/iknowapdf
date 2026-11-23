@@ -183,11 +183,11 @@ export default function AboutPage() {
             <div className="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
               <h3 className="font-bold text-slate-900 dark:text-white">How the site is funded</h3>
               <p>
-                The tools are free to use. The free version shows ads and uses analytics; an optional{" "}
-                <Link href="/pricing" className="text-rose-600 underline font-semibold hover:text-rose-500">
-                  ad-free pass
-                </Link>{" "}
-                removes the ads and helps cover hosting and development.
+                The tools are free, with no ads and no daily limits. The code is open source under the MIT license on 
+                <a href="https://github.com/YassineKIB123/iknowapdf" target="_blank" rel="noopener" className="text-rose-600 underline font-semibold hover:text-rose-500">
+                  GitHub
+                </a>
+                . Optional donations help cover hosting.
               </p>
             </div>
           </section>

@@ -94,10 +94,10 @@ export default function TermsOfServicePage() {
 
           <section className="space-y-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
             <h2 className="text-base font-bold text-slate-900 dark:text-white">
-              6. Optional Ad-Free Pass
+              6. Free to Use
             </h2>
             <p>
-              The PDF tools are free to use. The optional ad-free pass, paid through PayPal, only removes advertisements; it does not unlock additional tools. The pass is stored in the browser where it was activated. For payment questions, contact{" "}
+              All tools are free to use, with no ads and no account. Donations are optional and do not unlock anything. For questions, contact{" "}
               <a href="mailto:support@iknowapdf.lol" className="text-rose-600 underline hover:text-rose-500">
                 support@iknowapdf.lol
               </a>

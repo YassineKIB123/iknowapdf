@@ -6,14 +6,14 @@ import { ShieldCheck, ArrowLeft, Lock, Cookie, EyeOff } from "lucide-react";
 export const metadata: Metadata = {
   title: "Privacy Policy — In-Browser PDF Processing",
   description:
-    "How iKnowAPDF handles your data: PDF tools process files in your browser without uploading them, plus details on cookies, ads, analytics and payments.",
+    "How iKnowAPDF handles your data: PDF tools process files in your browser without uploading them, plus details on local storage, analytics and donations.",
   alternates: {
     canonical: "https://iknowapdf.lol/privacy",
   },
   openGraph: { images: ["/opengraph-image.png"],
     title: "Privacy Policy | iKnowAPDF",
     description:
-      "How iKnowAPDF handles files, cookies, ads, analytics and payments.",
+      "How iKnowAPDF handles files, local storage, analytics and donations.",
     url: "https://iknowapdf.lol/privacy",
     siteName: "iKnowAPDF",
     type: "website",
@@ -66,13 +66,13 @@ export default function PrivacyPolicyPage() {
               <span>2. Personal Data & Local Storage</span>
             </h2>
             <p>
-              We do not require account registration, and we do not collect document contents. We use your browser&apos;s <code>localStorage</code> on your device to remember your language (<code>EN</code>, <code>FR</code>, <code>ES</code>, <code>RU</code>, <code>AR</code>) and theme, your cookie choice, a signature you choose to save in the Sign PDF tool, and whether an ad-free pass is active in that browser. This data stays in your browser and can be removed by clearing site data.
+              We do not require account registration, and we do not collect document contents. We use your browser&apos;s <code>localStorage</code> on your device to remember your language (<code>EN</code>, <code>FR</code>, <code>ES</code>, <code>RU</code>, <code>AR</code>) and theme, your cookie choice, a signature you choose to save in the Sign PDF tool. This data stays in your browser and can be removed by clearing site data.
             </p>
             <p>
               <strong>Analytics:</strong> We use <a href="https://posthog.com/privacy" target="_blank" rel="noopener noreferrer">PostHog</a> to understand how the site is used: pages visited, buttons clicked, browser and device type, approximate location, and recordings of how the page was used. PostHog keeps a random ID in your browser&apos;s <code>localStorage</code> instead of a cookie. Recordings hide all page text, everything typed into input boxes, and every file preview, so PostHog never receives your file names or the contents of your files. This analytics data is sent to PostHog through our own address (iknowapdf.lol/rx), which passes it on unchanged. We may also use Google Analytics for aggregate usage, which does not receive your files either.
             </p>
             <p>
-              <strong>Payments:</strong> The optional ad-free pass is paid through PayPal. PayPal processes your payment details under its own privacy policy; we do not receive your card number.
+              <strong>Donations:</strong> Optional donations go through PayPal. PayPal processes your payment details under its own privacy policy; we do not receive your card number.
             </p>
             <p>
               <strong>Email:</strong> If you email us, we use your address and message only to reply.
@@ -82,43 +82,11 @@ export default function PrivacyPolicyPage() {
           <section className="space-y-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
             <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Cookie className="h-4 w-4 text-rose-600" />
-              <span>3. Cookies & Third-Party Advertising (Google, NitroPay & Programmatic Partners)</span>
+              <span>3. Cookies and Advertising</span>
             </h2>
             <p>
-              To keep iKnowAPDF free to use, we may display advertisements provided by third-party ad networks, including <strong>Google AdSense</strong>, <strong>NitroPay</strong>, and their programmatic demand partners:
+              iKnowAPDF shows no ads and sets no advertising or tracking cookies. The only data stored in your browser is the <code>localStorage</code> described above.
             </p>
-            <ul className="list-disc pl-5 space-y-1.5">
-              <li>
-                Third-party vendors and ad exchanges (including Google and NitroPay), use cookies to serve ads based on a user&apos;s prior visits to this website or other websites.
-              </li>
-              <li>
-                Google&apos;s use of advertising cookies enables it and its partners to serve ads to users based on their visit to iKnowAPDF and/or other sites on the Internet.
-              </li>
-              <li>
-                <strong>CCPA / US State Privacy Rights:</strong> We do not sell or share personal files or documents. You may opt out of personalized third-party ad tracking at any time using the opt-out links below.
-              </li>
-              <li>
-                Users may opt out of personalized advertising by visiting{" "}
-                <a
-                  href="https://www.google.com/settings/ads"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-rose-600 underline hover:text-rose-500"
-                >
-                  Google Ads Settings
-                </a>{" "}
-                or{" "}
-                <a
-                  href="https://www.aboutads.info/choices/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-rose-600 underline hover:text-rose-500"
-                >
-                  www.aboutads.info
-                </a>
-                .
-              </li>
-            </ul>
           </section>
 
           <section className="space-y-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">

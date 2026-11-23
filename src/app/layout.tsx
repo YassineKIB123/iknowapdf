@@ -9,8 +9,6 @@ const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://iknowapdf.lol";
-const ADSENSE_ID =
-  process.env.NEXT_PUBLIC_ADSENSE_ID || "ca-pub-5152878593494077";
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export const metadata: Metadata = {
@@ -133,16 +131,6 @@ export default function RootLayout({
           {children}
           <CookieConsent />
         </LanguageProvider>
-        {ADSENSE_ID && (
-          // Ads sit below the tools, so load AdSense after the page is idle
-          // instead of blocking the first render.
-          <Script
-            id="adsense"
-            strategy="lazyOnload"
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_ID}`}
-            crossOrigin="anonymous"
-          />
-        )}
       </body>
     </html>
   );

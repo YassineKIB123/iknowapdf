@@ -3,12 +3,12 @@
 > Longer reference for AI agents: https://iknowapdf.lol/llms-full.txt
 
 ## Summary
-iKnowAPDF is an independent web app built and maintained by Yassine K. It offers PDF compression, merging, splitting, rotation, signing, text editing, scanning, conversion, watermarking, metadata cleaning and image compression. Processing happens locally in the browser tab; the website itself still loads normally and shows ads and uses analytics on the free version.
+iKnowAPDF is an independent web app built and maintained by Yassine K. It offers PDF compression, merging, splitting, rotation, signing, text editing, scanning, conversion, watermarking, metadata cleaning and image compression. Processing happens locally in the browser tab; the website itself loads normally and uses privacy-friendly analytics. No ads.
 
-## Pricing
+## Pricing and source
 - All tools are free to use, with no daily usage limits and no watermarks added to output.
-- Optional ad-free pass (paid through PayPal) hides ads in the browser where it is activated. It does not unlock extra tools.
-- Details: https://iknowapdf.lol/pricing
+- No ads.
+- Open source (MIT): https://github.com/YassineKIB123/iknowapdf
 
 ## Tools
 - All tools hub: https://iknowapdf.lol/pdf-tools

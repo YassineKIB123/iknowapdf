@@ -36,7 +36,6 @@ import {
   ScanText,
 } from "lucide-react";
 import React, { useState, useEffect, useRef, createContext, useContext } from "react";
-import { AdBanner } from "@/components/ads/AdBanner";
 import { BuyCoffeeButton } from "@/components/common/BuyCoffeeModal";
 import { useLanguage } from "@/context/LanguageContext";
 import { Translations } from "@/lib/i18n/translations";
@@ -381,12 +380,14 @@ export function ToolLayout({
               <Link href="/tools/scan" className="hover:text-rose-600 transition-colors">
                 {t.tools.scanTitle}
               </Link>
-              <Link
-                href="/pricing"
+              <a
+                href="https://github.com/YassineKIB123/iknowapdf"
+                target="_blank"
+                rel="noopener"
                 className="hover:text-rose-600 transition-colors font-semibold"
               >
-                {t.nav.pricing}
-              </Link>
+                GitHub
+              </a>
               <Link
                 href="/blog"
                 className="hover:text-rose-600 transition-colors font-semibold"
@@ -732,10 +733,6 @@ export function ToolLayout({
 
           {afterTool && <div className="mt-8">{afterTool}</div>}
 
-          <div className="mt-8">
-            <AdBanner format="leaderboard" />
-          </div>
-
           {/* 3-Step How It Works Guide */}
           {!hideHowItWorks && !hideToolSections && (
           <section className="mt-12 rounded-2xl border border-slate-200 bg-slate-50/60 p-6 sm:p-8 dark:border-slate-800 dark:bg-slate-900/40">
@@ -977,7 +974,7 @@ export function ToolLayout({
             <div className="flex flex-wrap items-center gap-4">
               <p>iKnowAPDF &copy; 2026. {t.footer.rights}</p>
               <Link href="/blog" className="hover:text-rose-600 underline-offset-4 hover:underline font-semibold text-rose-600 dark:text-rose-400">{t.site.guides}</Link>
-              <Link href="/pricing" className="hover:text-rose-600 underline-offset-4 hover:underline font-semibold text-rose-600 dark:text-rose-400">{t.nav.pricing} ($5/mo Ad-Free)</Link>
+              <a href="https://github.com/YassineKIB123/iknowapdf" target="_blank" rel="noopener" className="hover:text-rose-600 underline-offset-4 hover:underline font-semibold text-rose-600 dark:text-rose-400">Open source (MIT)</a>
               <Link href="/about" className="hover:text-rose-600 underline-offset-4 hover:underline">{t.common.about}</Link>
               <Link href="/contact" className="hover:text-rose-600 underline-offset-4 hover:underline">{t.common.contact}</Link>
               <Link href="/privacy" className="hover:text-rose-600 underline-offset-4 hover:underline">{t.common.privacy}</Link>

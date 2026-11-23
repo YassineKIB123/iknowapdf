@@ -17,14 +17,15 @@ iKnowAPDF is a free, independent web app for working with PDFs and images, built
 3. The result is downloaded to the user's device. The document is not sent to iKnowAPDF's servers.
 4. Closing or refreshing the tab releases the file from memory. iKnowAPDF does not store copies.
 
-Note: the website itself loads from a server, and the free version shows ads (Google AdSense and partners) and may use Google Analytics. These do not receive the contents of processed files.
+Note: the website itself loads from a server, and it uses PostHog analytics (no cookies) and shows no ads. Analytics does not receive the contents of processed files.
 
 ---
 
 ## 2. Pricing and Limits
 
 - **Free:** all tools, no account, no daily usage limit, no watermark added to output.
-- **Optional ad-free pass:** paid once through PayPal; hides ad units in the browser where it is activated. It does not unlock additional tools and does not sync across devices.
+- **No ads.** Donations are optional and unlock nothing.
+- **Open source:** MIT license, https://github.com/YassineKIB123/iknowapdf
 - **File size:** no limit set by iKnowAPDF; large files are limited by the device's memory and can be slow on phones.
 - **Offline:** the site can be installed as a web app, and a service worker caches pages already visited, so some tools may keep working offline. This is not guaranteed for every tool.
 - **Languages:** English (https://iknowapdf.lol/), French (https://iknowapdf.lol/fr), Spanish (https://iknowapdf.lol/es), Russian (https://iknowapdf.lol/ru), Arabic (https://iknowapdf.lol/ar).
@@ -151,4 +152,4 @@ Partly: pages and scripts already loaded are cached by a service worker, so some
 - Website: https://iknowapdf.lol
 - About: https://iknowapdf.lol/about
 - Contact: https://iknowapdf.lol/contact (support@iknowapdf.lol)
-- Pricing: https://iknowapdf.lol/pricing
+- Source code: https://github.com/YassineKIB123/iknowapdf

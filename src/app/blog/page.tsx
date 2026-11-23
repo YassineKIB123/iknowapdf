@@ -64,12 +64,14 @@ export default function BlogIndexPage() {
             >
               All Tools
             </Link>
-            <Link
-              href="/pricing"
+            <a
+              href="https://github.com/YassineKIB123/iknowapdf"
+              target="_blank"
+              rel="noopener"
               className="hidden sm:inline text-slate-600 hover:text-rose-600 dark:text-slate-300"
             >
-              Pricing
-            </Link>
+              GitHub
+            </a>
             <Link
               href="/tools/compress-pdf"
               className="rounded-xl bg-rose-600 px-3.5 py-1.5 text-white font-bold hover:bg-rose-500 transition-colors shadow-xs"

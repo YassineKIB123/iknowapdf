@@ -36,7 +36,6 @@ import {
   FileText,
   CheckCircle2,
 } from "lucide-react";
-import { AdBanner } from "@/components/ads/AdBanner";
 import { BuyCoffeeButton } from "@/components/common/BuyCoffeeModal";
 import { DICTIONARY } from "@/lib/i18n/translations";
 import { useLanguage } from "@/context/LanguageContext";
@@ -432,12 +431,14 @@ export default function HomeClient() {
             <Link href="/tools/scan" className="hover:text-rose-600 transition-colors">
               {t.nav.scan}
             </Link>
-            <Link
-              href="/pricing"
+            <a
+              href="https://github.com/YassineKIB123/iknowapdf"
+              target="_blank"
+              rel="noopener"
               className="hover:text-rose-600 transition-colors font-semibold"
             >
-              {t.nav.pricing}
-            </Link>
+              GitHub
+            </a>
             <Link
               href="/blog"
               className="hover:text-rose-600 transition-colors font-semibold"
@@ -924,11 +925,6 @@ export default function HomeClient() {
           })}
         </div>
 
-        {/* Ad Placement */}
-        <div className="my-10">
-          <AdBanner format="leaderboard" />
-        </div>
-
         {/* TRUST SECTION */}
         <section className="mt-20 border-t border-slate-200/80 dark:border-slate-800 pt-16">
           <div className="text-center max-w-2xl mx-auto mb-10">
@@ -1157,7 +1153,7 @@ export default function HomeClient() {
             <div className="flex flex-wrap items-center gap-4">
               <p>iKnowAPDF &copy; 2026. {t.footer.rights}</p>
               <Link href="/blog" className="hover:text-rose-600 underline-offset-4 hover:underline font-semibold text-rose-600 dark:text-rose-400">{t.site.guides}</Link>
-              <Link href="/pricing" className="hover:text-rose-600 underline-offset-4 hover:underline font-semibold text-rose-600 dark:text-rose-400">{t.nav.pricing} ($5/mo Ad-Free)</Link>
+              <a href="https://github.com/YassineKIB123/iknowapdf" target="_blank" rel="noopener" className="hover:text-rose-600 underline-offset-4 hover:underline font-semibold text-rose-600 dark:text-rose-400">Open source (MIT)</a>
               <Link href="/about" className="hover:text-rose-600 underline-offset-4 hover:underline">{t.common.about}</Link>
               <Link href="/privacy" className="hover:text-rose-600 underline-offset-4 hover:underline">{t.common.privacy}</Link>
               <Link href="/terms" className="hover:text-rose-600 underline-offset-4 hover:underline">{t.common.terms}</Link>
