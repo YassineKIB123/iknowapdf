@@ -16,6 +16,7 @@ iKnowAPDF is an independent web app built and maintained by Yassine K. It offers
 - Merge PDF: https://iknowapdf.lol/tools/merge-pdf (combine files in a chosen order)
 - Split PDF: https://iknowapdf.lol/tools/split-pdf (extract page ranges or split into separate files)
 - Rotate PDF: https://iknowapdf.lol/tools/rotate-pdf
+- Organize PDF: https://iknowapdf.lol/tools/organize-pdf (reorder pages by dragging, delete pages, extract selected pages into a new PDF)
 - Sign PDF: https://iknowapdf.lol/tools/sign-pdf (drawn, typed or uploaded signatures, date stamps, optional page listing SHA-256 hashes; not a certificate-based digital signature)
 - Edit PDF: https://iknowapdf.lol/tools/edit-pdf (edit existing text, add text, shapes, images, whiteout; edited pages are flattened on export)
 - Scan to PDF: https://iknowapdf.lol/tools/scan (camera or photo capture, crop, perspective correction, filters; for text recognition use Image to Text)

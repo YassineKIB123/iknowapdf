@@ -35,6 +35,7 @@ import {
   UploadCloud,
   FileText,
   CheckCircle2,
+  ArrowDownUp,
 } from "lucide-react";
 import { BuyCoffeeButton } from "@/components/common/BuyCoffeeModal";
 import { DICTIONARY } from "@/lib/i18n/translations";
@@ -101,6 +102,7 @@ const POPULAR_PSEO_LINKS = [
   { href: "/tools/unlock-pdf", label: "Remove password from PDF" },
   { href: "/tools/heic-to-jpg", label: "HEIC to JPG" },
   { href: "/tools/image-to-text", label: "Image to text (OCR)" },
+  { href: "/tools/organize-pdf", label: "Reorder, delete or extract PDF pages" },
   { href: "/compress-image-to-20kb", label: "Compress image to 20KB" },
   { href: "/compress-image-to-50kb", label: "Compress image to 50KB" },
   { href: "/compress-image-to-100kb", label: "Compress image to 100KB" },
@@ -296,6 +298,18 @@ export default function HomeClient() {
         icon: RotateCw,
         iconBg: "bg-amber-50 border-amber-100 dark:bg-amber-950/40 dark:border-amber-900/50",
         iconColor: "text-amber-600 dark:text-amber-400",
+      },
+      {
+        id: "organize-pdf",
+        title: t.site.organizePdf,
+        description: t.site.organizePdfDesc,
+        href: "/tools/organize-pdf",
+        formats: [".PDF"],
+        category: "organize" as const,
+        popular: false,
+        icon: ArrowDownUp,
+        iconBg: "bg-blue-50 border-blue-100 dark:bg-blue-950/40 dark:border-blue-900/50",
+        iconColor: "text-blue-600 dark:text-blue-400",
       },
       {
         id: "images-to-pdf",
@@ -1113,6 +1127,7 @@ export default function HomeClient() {
                 <li><Link href="/tools/merge-pdf" className="hover:text-rose-600">{t.nav.merge}</Link></li>
                 <li><Link href="/tools/split-pdf" className="hover:text-rose-600">{t.nav.split}</Link></li>
                 <li><Link href="/tools/rotate-pdf" className="hover:text-rose-600">{t.tools.rotateTitle}</Link></li>
+                <li><Link href="/tools/organize-pdf" className="hover:text-rose-600">{t.site.organizePdf}</Link></li>
                 <li><Link href="/jpg-to-pdf" className="hover:text-rose-600">{t.tools.imagesToPdfTitle}</Link></li>
               </ul>
             </div>

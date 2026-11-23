@@ -34,6 +34,7 @@ import {
   BookOpen,
   LockOpen,
   ScanText,
+  ArrowDownUp,
 } from "lucide-react";
 import React, { useState, useEffect, useRef, createContext, useContext } from "react";
 import { BuyCoffeeButton } from "@/components/common/BuyCoffeeModal";
@@ -78,7 +79,8 @@ export type SupportedToolId =
   | "compressImage"
   | "unlockPdf"
   | "heicToJpg"
-  | "imageToText";
+  | "imageToText"
+  | "organizePdf";
 
 interface ToolLayoutProps {
   toolId?: SupportedToolId;
@@ -140,6 +142,8 @@ function getToolMeta(
       return { title: t.site.heicToJpg, description: fallbackDesc };
     case "imageToText":
       return { title: t.site.imageToText, description: fallbackDesc };
+    case "organizePdf":
+      return { title: t.site.organizePdf, description: t.site.organizePdfDesc };
     default:
       return { title: fallbackTitle, description: fallbackDesc };
   }
@@ -151,6 +155,7 @@ function inferToolIdFromPathname(pathname: string): SupportedToolId | undefined 
   if (clean.includes("unlock-pdf")) return "unlockPdf";
   if (clean.includes("heic")) return "heicToJpg";
   if (clean.includes("image-to-text")) return "imageToText";
+  if (clean.includes("organize-pdf")) return "organizePdf";
   if (clean.includes("compress")) return "compress";
   if (clean.includes("merge")) return "merge";
   if (clean.includes("split")) return "split";
@@ -574,6 +579,14 @@ export function ToolLayout({
                             <ScanText className="h-4 w-4 text-violet-500" />
                             <span className="font-semibold text-xs">{t.site.imageToText}</span>
                           </Link>
+                          <Link
+                            href="/tools/organize-pdf"
+                            onClick={() => setIsMegaMenuOpen(false)}
+                            className="flex items-center gap-2.5 rounded-lg p-2 text-slate-700 hover:bg-slate-50 hover:text-rose-600 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
+                          >
+                            <ArrowDownUp className="h-4 w-4 text-blue-500" />
+                            <span className="font-semibold text-xs">{t.site.organizePdf}</span>
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -937,6 +950,7 @@ export function ToolLayout({
                 <li><Link href="/tools/merge-pdf" className="hover:text-rose-600">{t.tools.mergeTitle}</Link></li>
                 <li><Link href="/tools/split-pdf" className="hover:text-rose-600">{t.tools.splitTitle}</Link></li>
                 <li><Link href="/tools/rotate-pdf" className="hover:text-rose-600">{t.tools.rotateTitle}</Link></li>
+                <li><Link href="/tools/organize-pdf" className="hover:text-rose-600">{t.site.organizePdf}</Link></li>
                 <li><Link href="/tools/watermark-pdf" className="hover:text-rose-600">{t.tools.watermarkTitle}</Link></li>
               </ul>
             </div>

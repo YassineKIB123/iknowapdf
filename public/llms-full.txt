@@ -53,6 +53,10 @@ All tools: https://iknowapdf.lol/pdf-tools
 ### Rotate PDF — https://iknowapdf.lol/tools/rotate-pdf
 - Rotates pages by 90°, 180° or 270°.
 
+### Organize PDF — https://iknowapdf.lol/tools/organize-pdf
+- Reorder pages by dragging thumbnails (or arrow buttons on phones), delete pages, and extract selected pages into a new PDF.
+- Pages are copied as they are (text stays selectable). Bookmarks are not kept, and fillable form fields may stop working.
+
 ### Sign PDF — https://iknowapdf.lol/tools/sign-pdf
 - Drawn, typed or uploaded signatures, date stamps, optional diagonal watermark.
 - A saved signature is stored in the browser's localStorage on that device.

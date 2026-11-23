@@ -15,6 +15,8 @@ export interface Translations {
     heicToJpgDesc: string;
     imageToText: string;
     imageToTextDesc: string;
+    organizePdf: string;
+    organizePdfDesc: string;
   };
   nav: {
     merge: string;
@@ -276,6 +278,8 @@ export const DICTIONARY: Record<Language, Translations> = {
       heicToJpgDesc: 'Convert iPhone HEIC photos to JPG, PNG or PDF in your browser.',
       imageToText: 'Image to Text (OCR)',
       imageToTextDesc: 'Extract text from images, screenshots and scanned PDFs with OCR.',
+      organizePdf: 'Organize PDF',
+      organizePdfDesc: 'Reorder, delete or extract PDF pages by dragging thumbnails.',
     },
   "nav": {
     "merge": "Merge PDF",
@@ -556,6 +560,8 @@ export const DICTIONARY: Record<Language, Translations> = {
       heicToJpgDesc: 'Convertissez les photos HEIC d’iPhone en JPG, PNG ou PDF dans votre navigateur.',
       imageToText: 'Image en texte (OCR)',
       imageToTextDesc: 'Extrayez le texte d’images, de captures d’écran et de PDF scannés grâce à l’OCR.',
+      organizePdf: 'Organiser un PDF',
+      organizePdfDesc: 'Réorganisez, supprimez ou extrayez des pages PDF en faisant glisser les miniatures.',
     },
   "nav": {
     "merge": "Fusionner PDF",
@@ -836,6 +842,8 @@ export const DICTIONARY: Record<Language, Translations> = {
       heicToJpgDesc: 'Convierte fotos HEIC del iPhone a JPG, PNG o PDF en tu navegador.',
       imageToText: 'Imagen a texto (OCR)',
       imageToTextDesc: 'Extrae el texto de imágenes, capturas de pantalla y PDF escaneados con OCR.',
+      organizePdf: 'Organizar PDF',
+      organizePdfDesc: 'Reordena, elimina o extrae páginas de un PDF arrastrando las miniaturas.',
     },
   "nav": {
     "merge": "Unir PDF",
@@ -1116,6 +1124,8 @@ export const DICTIONARY: Record<Language, Translations> = {
       heicToJpgDesc: 'Конвертируйте фото HEIC с iPhone в JPG, PNG или PDF прямо в браузере.',
       imageToText: 'Распознать текст (OCR)',
       imageToTextDesc: 'Извлекайте текст из изображений, скриншотов и отсканированных PDF с помощью OCR.',
+      organizePdf: 'Упорядочить PDF',
+      organizePdfDesc: 'Меняйте порядок, удаляйте или извлекайте страницы PDF, перетаскивая миниатюры.',
     },
   "nav": {
     "merge": "Объединить PDF",
@@ -1396,6 +1406,8 @@ export const DICTIONARY: Record<Language, Translations> = {
       heicToJpgDesc: 'حوّل صور HEIC من iPhone إلى JPG أو PNG أو PDF داخل متصفحك.',
       imageToText: 'استخراج النص من الصور (OCR)',
       imageToTextDesc: 'استخرج النص من الصور ولقطات الشاشة وملفات PDF الممسوحة ضوئيًا باستخدام OCR.',
+      organizePdf: 'تنظيم PDF',
+      organizePdfDesc: 'أعد ترتيب صفحات PDF أو احذفها أو استخرجها بسحب الصور المصغرة.',
     },
   "nav": {
     "merge": "دمج PDF",
