@@ -44,6 +44,7 @@ export default function PdfToolsHubPage() {
         { href: "/tools/merge-pdf", label: "Merge PDF" },
         { href: "/tools/split-pdf", label: "Split PDF" },
         { href: "/tools/rotate-pdf", label: "Rotate PDF" },
+        { href: "/tools/organize-pdf", label: "Organize PDF (reorder, delete, extract pages)" },
         { href: "/tools/edit-pdf", label: "Edit PDF" },
         { href: "/tools/sign-pdf", label: "Sign PDF" },
         { href: "/tools/scan", label: "Scan to PDF" },

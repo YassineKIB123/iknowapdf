@@ -14,6 +14,7 @@ Most free PDF sites upload your document to their server to process it. That is 
 | Merge PDF | `/tools/merge-pdf` | Combine PDFs in any order |
 | Split PDF | `/tools/split-pdf` | Pick pages visually or by range (`1-3, 5`), odd/even presets |
 | Rotate PDF | `/tools/rotate-pdf` | Rotate single pages or all pages |
+| Organize PDF | `/tools/organize-pdf` | Reorder pages by dragging, delete pages, extract selected pages |
 | Edit PDF | `/tools/edit-pdf` | Add text, images, shapes, highlights and whiteout |
 | Sign PDF | `/tools/sign-pdf` | Drawn, typed or image signatures, date stamps |
 | Watermark PDF | `/tools/watermark-pdf` | Text watermarks and page numbers |
