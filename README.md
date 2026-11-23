@@ -1,30 +1,68 @@
-# iKnowAPDF (`pdftool`) — 100% Client-Side PDF Suite & Programmatic SEO Engine
+# iKnowAPDF
 
-iKnowAPDF is a privacy-first, 100% client-side PDF toolkit built with **Next.js 16 (Static Export)**, **Tailwind CSS v4**, `pdf-lib`, `pdfjs-dist`, and **Cloudflare Workers Static Assets**. Every document operation runs locally inside the user's browser memory with zero server uploads.
+Free PDF and image tools that run entirely in your browser. Your files are never uploaded to a server.
 
-## Core Tools Included
+Live site: https://iknowapdf.lol
 
-1. **Compress PDF (`/tools/compress-pdf`)**: Multi-tier compression (`Extreme`, `Recommended`, `Lossless Stream`) combining PDF object-stream packing with PDF.js canvas DPI downsampling and `< 100 KB` / `< 200 KB` target presets.
-2. **Merge PDF (`/tools/merge-pdf`)**: Combine multiple PDFs in custom drag/arrow order.
-3. **Split PDF (`/tools/split-pdf`)**: Interactive visual page thumbnail selector + custom range (`1-3, 5`) and Odd/Even presets.
-4. **Rotate PDF (`/tools/rotate-pdf`)**: Per-page and batch `+90°`/`-90°` permanent rotation with memory-safe `Blob` Object URL thumbnails.
-5. **Sign & Stamp PDF (`/tools/sign-pdf`)**: High-DPI Bézier signature drawing pad, typed cursive signatures, image/stamp uploads, `localStorage` saved signatures, `+ Date` and `+ Check ✓` stamps, and optional diagonal watermarks.
-6. **Scan to PDF (`/tools/scan`)**: Mobile/desktop camera capture, automatic Sobel/luminance document edge detection (`detectDocumentCorners`), Web Worker perspective warping, and LUT-accelerated `Magic Color` / `B&W` thresholding.
-7. **Universal Converter (`/tools/convert`)**: Convert Word (`.docx`), Excel (`.xlsx`/`.csv`), PowerPoint (`.pptx`), Plain Text/Markdown, and Images to and from PDF with Unicode/RTL canvas fallback for Arabic and Cyrillic scripts.
-8. **Images to PDF (`/tools/images-to-pdf`)**: Convert JPG, PNG, and WebP collections into A4 or Fit-to-Image PDFs with live sheet and margin preview.
-9. **PDF to Images (`/tools/pdf-to-images`)**: Render PDF pages to 150 DPI or 300 DPI PNG/JPG images individually or packaged as a ZIP archive.
-10. **Watermark & Page Numbers PDF (`/tools/watermark-pdf`)**: Stamp custom diagonal text watermarks and `Page X of Y` numbering across all pages.
-11. **Sanitize & Strip PDF Metadata (`/tools/sanitize-pdf`)**: Inspect and permanently purge hidden Author, Creator, Producer, and timestamp metadata streams.
+Most free PDF sites upload your document to their server to process it. That is a problem for contracts, IDs, medical records and bank statements. iKnowAPDF does every operation locally with WebAssembly and JavaScript, so the file stays on your device. Because the code is open, anyone can check that claim instead of trusting it.
 
-## Development & Deployment
+## Tools
+
+| Tool | Path | What it does |
+| --- | --- | --- |
+| Compress PDF | `/tools/compress-pdf` | Object-stream packing plus optional image downsampling, with size targets |
+| Merge PDF | `/tools/merge-pdf` | Combine PDFs in any order |
+| Split PDF | `/tools/split-pdf` | Pick pages visually or by range (`1-3, 5`), odd/even presets |
+| Rotate PDF | `/tools/rotate-pdf` | Rotate single pages or all pages |
+| Edit PDF | `/tools/edit-pdf` | Add text and shapes to pages |
+| Sign PDF | `/tools/sign-pdf` | Drawn, typed or image signatures, date stamps |
+| Watermark PDF | `/tools/watermark-pdf` | Text watermarks and page numbers |
+| Unlock PDF | `/tools/unlock-pdf` | Remove owner restrictions with qpdf (WebAssembly) |
+| Sanitize PDF | `/tools/sanitize-pdf` | Inspect and strip hidden metadata |
+| Scan to PDF | `/tools/scan` | Camera capture, edge detection, perspective correction |
+| Convert | `/tools/convert` | Word, Excel, PowerPoint, text and images to and from PDF |
+| Images to PDF | `/tools/images-to-pdf` | JPG, PNG, WebP to PDF |
+| PDF to images | `/tools/pdf-to-images` | Render pages to PNG or JPG, single files or ZIP |
+| Image to text (OCR) | `/tools/image-to-text` | Tesseract OCR in the browser |
+| HEIC to JPG / PDF | `/tools/heic-to-jpg`, `/tools/heic-to-pdf` | Convert iPhone photos |
+| Compress image | `/tools/compress-image` | Resize and re-encode images |
+
+## How it works
+
+- Next.js 16 static export (`out/`), no backend for file processing.
+- PDF work: [pdf-lib](https://github.com/Hopding/pdf-lib) for editing, [PDF.js](https://github.com/mozilla/pdf.js) for rendering, [qpdf](https://github.com/qpdf/qpdf) compiled to WebAssembly for unlocking.
+- OCR: [Tesseract](https://github.com/tesseract-ocr/tesseract) WebAssembly build, self-hosted in `public/tesseract`.
+- Office formats: `mammoth`, `docx`, `xlsx`, `pptxgenjs`, `jszip`.
+- Hosting: Cloudflare Workers static assets (`wrangler.jsonc`). The only Worker route is `/rx/*`, an analytics proxy.
+
+### Check it yourself
+
+Open DevTools, go to the Network tab, and run any tool. You will see the page load its scripts and WebAssembly files, and no request that carries your document.
+
+### Analytics
+
+The site uses PostHog for page views and basic usage events (`public/ph.js`). File names and file contents are never sent. See the privacy page on the site.
+
+## Run it locally
+
+Requires Node.js 20 or newer.
 
 ```bash
-# Install dependencies
 npm install
-
-# Run local development server
-npm run dev
-
-# Generate smart XML sitemaps and build static export (out/)
-npm run build
+npm run dev      # http://localhost:3000
+npm run build    # static export to out/
 ```
+
+## Contributing
+
+Bug reports and pull requests are welcome. Good places to start:
+
+- A PDF that a tool fails on (attach it if it has nothing private in it, or describe its structure).
+- New tools that can run fully client-side.
+- Translations and accessibility fixes.
+
+Please keep every change client-side. A pull request that sends user files to a server will not be merged.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
