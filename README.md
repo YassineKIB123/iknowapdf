@@ -1,5 +1,7 @@
 # iKnowAPDF
 
+[![CI](https://github.com/YassineKIB123/iknowapdf/actions/workflows/ci.yml/badge.svg)](https://github.com/YassineKIB123/iknowapdf/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Free PDF and image tools that run entirely in your browser. Your files are never uploaded to a server.
 
 Live site: https://iknowapdf.lol
