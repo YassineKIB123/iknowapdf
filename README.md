@@ -14,7 +14,7 @@ Most free PDF sites upload your document to their server to process it. That is 
 | Merge PDF | `/tools/merge-pdf` | Combine PDFs in any order |
 | Split PDF | `/tools/split-pdf` | Pick pages visually or by range (`1-3, 5`), odd/even presets |
 | Rotate PDF | `/tools/rotate-pdf` | Rotate single pages or all pages |
-| Edit PDF | `/tools/edit-pdf` | Add text and shapes to pages |
+| Edit PDF | `/tools/edit-pdf` | Add text, images, shapes, highlights and whiteout |
 | Sign PDF | `/tools/sign-pdf` | Drawn, typed or image signatures, date stamps |
 | Watermark PDF | `/tools/watermark-pdf` | Text watermarks and page numbers |
 | Unlock PDF | `/tools/unlock-pdf` | Remove owner restrictions with qpdf (WebAssembly) |
@@ -41,7 +41,7 @@ Open DevTools, go to the Network tab, and run any tool. You will see the page lo
 
 ### Analytics
 
-The site uses PostHog for page views and basic usage events (`public/ph.js`). File names and file contents are never sent. See the privacy page on the site.
+The site uses PostHog for page views and session replays (`public/ph.js`). No cookies. On the tool pages, replays mask all text and inputs, and anything that looks like a file name. File contents are never sent. See the privacy page on the site.
 
 ## Run it locally
 
