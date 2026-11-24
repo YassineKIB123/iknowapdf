@@ -58,13 +58,11 @@ npm run build    # static export to out/
 
 ## Contributing
 
-Bug reports and pull requests are welcome. Good places to start:
+Bug reports and pull requests are welcome. Accessibility fixes, translations, and reproducible tool bugs are good places to start.
 
-- A PDF that a tool fails on (attach it if it has nothing private in it, or describe its structure).
-- New tools that can run fully client-side.
-- Translations and accessibility fixes.
-
-Please keep every change client-side. A pull request that sends user files to a server will not be merged.
+- [Contribution guide](CONTRIBUTING.md) for setup, bug reports, and pull requests.
+- [Open issues](https://github.com/YassineKIB123/iknowapdf/issues) for work already on the roadmap.
+- [Code of conduct](CODE_OF_CONDUCT.md) and [private security reporting](SECURITY.md).
 
 ## License
 
