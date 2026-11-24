@@ -4,7 +4,7 @@ Check the [open issues](https://github.com/YassineKIB123/iknowapdf/issues) for e
 
 ## Run the project locally
 
-Use Node.js 22 to match GitHub Actions. Clone the repo, then run:
+Use Node.js 22.13 or later in the Node.js 22 series to match GitHub Actions. Clone the repo, then run:
 
 ```bash
 npm ci

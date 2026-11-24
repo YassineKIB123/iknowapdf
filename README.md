@@ -48,10 +48,10 @@ The site uses PostHog for page views and session replays (`public/ph.js`). No co
 
 ## Run it locally
 
-Requires Node.js 20 or newer.
+Use Node.js 22.13 or later in the Node.js 22 series to match CI.
 
 ```bash
-npm install
+npm ci
 npm run dev      # http://localhost:3000
 npm run build    # static export to out/
 ```
