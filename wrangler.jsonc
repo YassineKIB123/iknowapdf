@@ -3,6 +3,8 @@
   "compatibility_date": "2026-10-06",
   // Only /rx/* (PostHog proxy) runs the Worker; every other request is a plain static asset.
   "main": "worker/index.js",
+  // Cloudflare Workers Builds uses wrangler preview for pull requests.
+  "previews": {},
   "assets": {
     "directory": "./out",
     "binding": "ASSETS",
